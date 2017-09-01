@@ -52,6 +52,12 @@ about:
   license: BSD 3-Clause
   license_file: LICENSE.txt
   summary: 'Image processing routines for SciPy.'
+  description: |
+    The scikit-image SciKit (toolkit for SciPy) extends scipy.ndimage to
+    provide a versatile set of image processing routines.
+  doc_url: http://scikit-image.org/docs/dev/
+  dev_url: https://github.com/scikit-image/scikit-image
+  doc_source_url: https://github.com/scikit-image/scikit-image/tree/master/doc
 
 extra:
   recipe-maintainers:
