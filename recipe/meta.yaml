@@ -9,7 +9,7 @@ source:
   sha256: 353879ddf7483f4621872c49cd9bc8a0ad1c3154ac0670b70799922f4cb899e8
 
 build:
-  number: 0
+  number: 1
   script:
     - python setup.py install --single-version-externally-managed --record=record.txt
   entry_points:
@@ -33,7 +33,7 @@ requirements:
     - {{ pin_compatible('numpy') }}
     - scipy >=0.17
     - matplotlib >=1.3.1
-    - networkx >=1.8,<2.0
+    - networkx >=1.8
     - pillow >=2.1.0
     - dask >=0.5
     - pywavelets >=0.4.0
