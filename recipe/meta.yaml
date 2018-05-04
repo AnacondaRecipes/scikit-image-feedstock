@@ -5,11 +5,11 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/s/scikit-image/scikit-image-{{ version }}.tar.gz
-  sha256: 353879ddf7483f4621872c49cd9bc8a0ad1c3154ac0670b70799922f4cb899e8
+  git_url: https://github.com/scikit-image/scikit-image
+  git_tag: v{{ version }}
 
 build:
-  number: 1
+  number: 2
   script:
     - python setup.py install --single-version-externally-managed --record=record.txt
   entry_points:
@@ -42,9 +42,6 @@ requirements:
 test:
   imports:
     - skimage
-  commands:
-    - conda inspect linkages -p $PREFIX scikit-image  # [not win]
-    - conda inspect objects -p $PREFIX scikit-image  # [osx]
 
 about:
   home: http://scikit-image.org/
@@ -59,5 +56,6 @@ extra:
     - jakirkham
     - jni
     - Korijn
+    - mingwandroid
     - msarahan
     - ocefpaf
