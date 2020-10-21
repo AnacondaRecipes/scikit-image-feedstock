@@ -1,4 +1,4 @@
-{% set version = "0.16.2" %}
+{% set version = "0.17.2" %}
 
 package:
   name: scikit-image
@@ -6,17 +6,27 @@ package:
 
 source:
   url: https://pypi.io/packages/source/s/scikit-image/scikit-image-{{ version }}.tar.gz
-  sha256: dd7fbd32da74d4e9967dc15845f731f16e7966cee61f5dc0e12e2abb1305068c
+  sha256: bd954c0588f0f7e81d9763dc95e06950e68247d540476e06cb77bcbcd8c2d8b3
   # url: https://github.com/scikit-image/scikit-image/archive/v{{ version }}.tar.gz
   # fn: scikit-image-{{ version }}.tar.gz
   # sha256: 3b8414ccb9b524d0d507909e9a4d3843af6ca9919152199d380f2b21639abf17
 
 build:
   number: 0
-  skip: True  # [py==27]
   script:
     - rm -rf skimage/viewer/tests  # we don't depend on Qt
-    - "{{ PYTHON }} -m pip install . --no-deps -vv"
+    ########################################################
+    # Remove these two lines at your own risk.
+    #
+    # pyproject.toml was getting detected by pip, and scikit-image was being built with modern numpy, not 1.11
+    - rm -f pyproject.toml
+    # I have no idea what this line actually fixes (other than speeding up the build a little bit)
+    # I think windows was freaking out about path lengths, and maybe this fixed it???
+    # https://github.com/conda-forge/scikit-image-feedstock/pull/39
+    - {{ PYTHON }} setup.py build_ext -j2
+    ########################################################
+    - {{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt
+    # - "{{ PYTHON }} -m pip install . --disable-pip-version-check --no-deps --ignore-installed --no-cache-dir --no-build-isolation -vvv"
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -24,16 +34,19 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
+    - llvm-openmp >=4.0.1  # [osx]
   host:
     - python
     - pip
     - cython >=0.25,!=0.28.2,!=0.29.0
     - numpy
+    - llvm-openmp >=4.0.01  # [osx]
   run:
     - python
+    - llvm-openmp >=4.0.1  # [osx]
     - {{ pin_compatible('numpy') }}
     - scipy >=0.19
-    - matplotlib >=2.0.0
+    - matplotlib-base >=2.0.0
     - networkx >=2.0
     - pillow >=4.3.0
     - pywavelets >=0.4.0
@@ -42,9 +55,39 @@ requirements:
     # which requires numpy, dask-core and toolz (cytoolz for speed)
     - dask-core >=0.15.0
     - toolz >=0.7.3
-    - cytoolz >=0.7.3
+    # cytoolz was designed for CPython and not for PyPy
+    # https://github.com/conda-forge/cytoolz-feedstock/pull/28#issuecomment-705421078
+    - cytoolz >=0.7.3  # [python_impl == 'cpython']
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
+    - tifffile >=2019.7.26
+  run_constrained:
+    - pooch >=0.5.2
+
+# Issues reported upstream. Follow
+# https://github.com/scikit-image/scikit-image/issues/4768
+
+{% set tests_to_skip = "_not_a_real_test" %}
+# https://github.com/scikit-image/scikit-image/issues/4774 - test_end_points fails on ppc64le with python 3.6, 3.7, 3.8 #4774
+{% set tests_to_skip = tests_to_skip + " or test_end_points" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4773 - test_RGB fails on ppc64le with python 3.7 #4773
+{% set tests_to_skip = tests_to_skip + " or test_RGB" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4772 - test_periodic_reference fails on ppc64le python 3.7 (conda feedstock) #4772
+{% set tests_to_skip = tests_to_skip + " or test_periodic_reference" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4775 - test_hdx_rgb_roundtrip fail son osx with python 3.8 #4775
+{% set tests_to_skip = tests_to_skip + " or test_hdx_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
+# https://github.com/scikit-image/scikit-image/issues/4776 test_hed_rgb_roundtrip fails on osx with python3.8 and ppc64le with python 3.6 #4776
+{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
+# https://github.com/scikit-image/scikit-image/issues/4778 - test_hed_rgb_float_roundtrip fails on ppc64le python 3.8 #4778
+{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_float_roundtrip" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4781 - test_ellipse_rotated fails on python3.8 #4781
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_rotated" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4785 - test_fixed_reference fails on ppc64le with python 3.7 #4785
+{% set tests_to_skip = tests_to_skip + " or test_fixed_reference" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4782 - test_free_reference fails on ppc64le with python 3.6 #4782
+{% set tests_to_skip = tests_to_skip + " or test_free_reference" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4777 - test_uint16 fails on win #4777
+{% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
 
 test:
   requires:
@@ -55,20 +98,28 @@ test:
   commands:
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
-    - pytest --pyargs skimage
+    # A warning in numpy that makes tests fail has been fixed in 0.18
+    # Remove this then.
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: http://scikit-image.org/
-  license: BSD 3-Clause
+  license: BSD-3-Clause
   license_file: LICENSE.txt
-  summary: 'Image processing routines for SciPy.'
+  summary: Image processing in Python.
+  description: |
+    scikit-image is a collection of algorithms for image processing. 
+    It is available free of charge and free of restriction. 
+    We pride ourselves on high-quality, peer-reviewed code, 
+    written by an active community of volunteers.
 
 extra:
   recipe-maintainers:
-    - ivoflipse
     - jakirkham
     - jni
     - msarahan
     - ocefpaf
     - soupault
     - hmaarrfk
+    - emmanuelle 
