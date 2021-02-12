@@ -10,9 +10,11 @@ source:
   # url: https://github.com/scikit-image/scikit-image/archive/v{{ version }}.tar.gz
   # fn: scikit-image-{{ version }}.tar.gz
   # sha256: 3b8414ccb9b524d0d507909e9a4d3843af6ca9919152199d380f2b21639abf17
+  patches:
+    - skip-broken-tests.patch
 
 build:
-  number: 0
+  number: 1
   script:
     - rm -rf skimage/viewer/tests  # we don't depend on Qt
     ########################################################
@@ -61,6 +63,9 @@ requirements:
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
     - tifffile >=2019.7.26
+    # Using selector until packages for other platforms are (re)built using
+    # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
+    - _openmp_mutex   # [s390x]
   run_constrained:
     - pooch >=0.5.2
 
