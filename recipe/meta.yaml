@@ -95,7 +95,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
 
 {% set tests_to_skip = tests_to_skip + " or test_dask_histogram" %}  # [linux and aarch64]
-{% set tests_to_skip = tests_to_skip + " or test_threshold_dask_compatibility" %}  # [linux and aarch64]
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}  # [linux and aarch64]
 {% set tests_to_skip = tests_to_skip + " or test_mark_boundaries_subpixel" %}  # [linux and aarch64]
 
 test:
