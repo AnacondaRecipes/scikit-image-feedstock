@@ -94,6 +94,10 @@ requirements:
 # https://github.com/scikit-image/scikit-image/issues/4777 - test_uint16 fails on win #4777
 {% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
 
+{% set tests_to_skip = tests_to_skip + " or test_dask_histogram" %}  # [linux and aarch64]
+{% set tests_to_skip = tests_to_skip + " or test_threshold_dask_compatibility" %}  # [linux and aarch64]
+{% set tests_to_skip = tests_to_skip + " or test_mark_boundaries_subpixel" %}  # [linux and aarch64]
+
 test:
   requires:
     - pytest
