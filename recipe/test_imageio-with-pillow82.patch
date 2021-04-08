@@ -1,0 +1,28 @@
+From 4be0f1b0a578e5239f2352af1aec2c80011ed4da Mon Sep 17 00:00:00 2001
+From: Gregory Lee <grlee77@gmail.com>
+Date: Mon, 5 Apr 2021 13:36:40 -0400
+Subject: [PATCH] FIX, TST: allow either SyntaxError or OSError for the
+ truncated JPG exception
+
+---
+ skimage/io/tests/test_imageio.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+---
+Source: https://github.com/scikit-image/scikit-image/pull/5315
+
+diff --git a/skimage/io/tests/test_imageio.py b/skimage/io/tests/test_imageio.py
+index 3973330d8f..02e35e66c8 100644
+--- a/skimage/io/tests/test_imageio.py
++++ b/skimage/io/tests/test_imageio.py
+@@ -35,7 +35,9 @@ def test_imageio_palette():
+ def test_imageio_truncated_jpg():
+     # imageio>2.0 uses Pillow / PIL to try and load the file.
+     # Oddly, PIL explicitly raises a SyntaxError when the file read fails.
+-    with testing.raises(SyntaxError):
++    # The exception type changed from SyntaxError to OSError in PIL 8.2.0, so
++    # allow for either to be raised.
++    with testing.raises((OSError, SyntaxError)):
+         imread(fetch('data/truncated.jpg'))
+ 
+ 
