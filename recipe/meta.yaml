@@ -99,6 +99,10 @@ requirements:
 # Anaconda has observed it on Windows, macOS, and Linux.
 {% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
 
+{% set tests_to_skip = tests_to_skip + " or test_dask_histogram" %}  # [linux and aarch64]
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}  # [linux and aarch64]
+{% set tests_to_skip = tests_to_skip + " or test_mark_boundaries_subpixel" %}  # [linux and aarch64]
+
 test:
   requires:
     - pytest
