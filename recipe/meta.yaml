@@ -13,7 +13,7 @@ source:
     - test_imageio-with-pillow82.patch    # remove on next upstream release
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<37]
   script:
     - rm -rf skimage/viewer/tests  # we don't depend on Qt
@@ -65,7 +65,7 @@ requirements:
     - tifffile >=2019.7.26
     # Using selector until packages for other platforms are (re)built using
     # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
-    - _openmp_mutex   # [s390x]
+    - _openmp_mutex   # [s390x or aarch64]
   run_constrained:
     - pooch >=1.3.0
 
