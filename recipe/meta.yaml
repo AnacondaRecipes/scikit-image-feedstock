@@ -10,7 +10,6 @@ source:
   sha256: {{ sha256 }}
   patches:
     - skip-broken-tests.patch
-    - test_imageio-with-pillow82.patch    # remove on next upstream release
 
 build:
   number: 0
