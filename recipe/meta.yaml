@@ -44,7 +44,7 @@ requirements:
     - cython >=0.29.18
     - numpy
     - llvm-openmp >=4.0.01  # [osx]
-    - setuptools <=51.0.0
+    - setuptools
     - wheel
   run:
     - python
@@ -68,7 +68,7 @@ requirements:
     - tifffile >=2019.7.26
     # Using selector until packages for other platforms are (re)built using
     # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
-    - _openmp_mutex   # [s390x]
+    - _openmp_mutex   # [linux64 or s390x]
   run_constrained:
     - pooch >=1.3.0
 
