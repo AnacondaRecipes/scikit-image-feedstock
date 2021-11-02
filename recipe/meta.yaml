@@ -68,7 +68,7 @@ requirements:
     - tifffile >=2019.7.26
     # Using selector until packages for other platforms are (re)built using
     # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
-    - _openmp_mutex   # [linux64 or s390x]
+    - _openmp_mutex  # [linux and (not ppc64le)]
   run_constrained:
     - pooch >=1.3.0
 
@@ -108,9 +108,15 @@ test:
     - pytest-localserver
     - pooch >=1.3.0
     - pillow
+    - pip
   imports:
     - skimage
   commands:
+    - pip check
+    - set OPENBLAS_NUM_THREADS=1          # [win]
+    - set OMP_NUM_THREADS=1               # [win]
+    - export OPENBLAS_NUM_THREADS=1       # [not win]
+    - export OMP_NUM_THREADS=1            # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
     # A warning in numpy that makes tests fail has been fixed in 0.18
