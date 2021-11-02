@@ -104,6 +104,8 @@ requirements:
 
 {% set tests_to_skip = tests_to_skip + " or test_thresholding" %}
 
+{% set tests_to_skip = tests_to_skip + " or test_uint8" %}
+
 test:
   requires:
     - pytest
