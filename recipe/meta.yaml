@@ -102,6 +102,8 @@ requirements:
 # Anaconda has observed it on Windows, macOS, and Linux.
 {% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
 
+{% set tests_to_skip = tests_to_skip + " or test_thresholding" %}
+
 test:
   requires:
     - pytest
