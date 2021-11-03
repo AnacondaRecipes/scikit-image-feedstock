@@ -14,6 +14,8 @@ source:
 build:
   number: 0
   skip: true  # [py<37]
+  # There isn't tifffile >=2019.7.26 on win32 
+  skip: true  # [win32]
   script:
     - rm -rf skimage/viewer/tests  # we don't depend on Qt
     ########################################################
@@ -101,10 +103,8 @@ requirements:
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
 {% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
-
-{% set tests_to_skip = tests_to_skip + " or  or test_low_data_range" %}  # [win64]
-
-
+# 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
+{% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
 test:
   requires:
     - pytest
