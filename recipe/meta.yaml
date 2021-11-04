@@ -105,6 +105,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
 # 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
 {% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
+
 test:
   requires:
     - pytest
