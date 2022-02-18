@@ -1,5 +1,5 @@
-{% set version = "0.18.3" %}
-{% set sha256 = "ecae99f93f4c5e9b1bf34959f4dc596c41f2f6b2fc407d9d9ddf85aebd3137ca" %}
+{% set version = "0.19.2" %}
+{% set sha256 = "d433b4642a6f8219e749dfbbe4b5e742d560996540c9749ede510274d061866d" %}
 
 package:
   name: scikit-image
