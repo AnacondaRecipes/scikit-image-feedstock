@@ -46,7 +46,8 @@ requirements:
     - python
     - cython >=0.29.24,<3.0
     - llvm-openmp >=4.0.01  # [osx]
-    - numpy
+    - numpy 1.17  # [win]
+    - numpy       # [not win]
     - packaging
     - pip
     - pythran
@@ -68,7 +69,7 @@ requirements:
     - dask-core >=1.0.0,!=2.17.0
     - toolz >=0.7.3
     # cytoolz was designed for CPython and not for PyPy
-    # https://github.scom/conda-forge/cytoolz-feedstock/pull/28#issuecomment-705421078
+    # https://github.com/conda-forge/cytoolz-feedstock/pull/28#issuecomment-705421078
     - cytoolz >=0.7.3  # [python_impl == 'cpython']
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
