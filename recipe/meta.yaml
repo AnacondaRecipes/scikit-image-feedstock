@@ -16,40 +16,26 @@ build:
   skip: true  # [py<37]
   # There isn't currently available tifffile >=2019.7.26 on win32 
   skip: true  # [win32]
-  script:
-    - rm -rf skimage/viewer/tests  # we don't depend on Qt
-    ########################################################
-    # Remove these two lines at your own risk.
-    #
-    # pyproject.toml was getting detected by pip, and scikit-image was being built with modern numpy, not 1.11
-    - rm -f pyproject.toml
-    # I have no idea what this line actually fixes (other than speeding up the build a little bit)
-    # I think windows was freaking out about path lengths, and maybe this fixed it???
-    # https://github.com/conda-forge/scikit-image-feedstock/pull/39
-    - {{ PYTHON }} setup.py build_ext -j2
-    ########################################################
-    - {{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt
-    # - "{{ PYTHON }} -m pip install . --disable-pip-version-check --no-deps --ignore-installed --no-cache-dir --no-build-isolation -vvv"
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
 requirements:
   build:
     # pythran code needs clang-cl on windows
-    - clang                                  # [win]
+    - clang                 # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - llvm-openmp >=4.0.1  # [osx]
-    - m2-patch  # [win]
-    - patch  # [not win]
+    - llvm-openmp >=4.0.1   # [osx]
+    - m2-patch              # [win]
+    - patch                 # [not win]
   host:
     - python
     - cython >=0.29.24,<3.0
     - llvm-openmp >=4.0.01  # [osx]
-    - numpy 1.17  # [win]
-    - numpy       # [not win]
+    - numpy
     - packaging
     - pip
+    - pytest-runner         # [win]
     - pythran
     - setuptools <=59.4
     - wheel
@@ -119,7 +105,6 @@ test:
   requires:
     - pytest
     - pytest-localserver
-    - pillow
     - pip
     # Include pooch to ensure full test coverage
     - pooch >=1.3.0 # [not (ppc64le or aarch64)]
