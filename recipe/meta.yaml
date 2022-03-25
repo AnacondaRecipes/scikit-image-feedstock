@@ -97,8 +97,8 @@ requirements:
 
 # 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
 {% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
-# 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py"
-{% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}  # [unix]
+# 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
+{% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
 
 test:
   requires:
