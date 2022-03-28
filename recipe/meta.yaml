@@ -13,6 +13,7 @@ source:
 
 build:
   number: 0
+  # trigger 1
   skip: true  # [py<37]
   # There isn't currently available tifffile >=2019.7.26 on win32 
   skip: true  # [win32]
