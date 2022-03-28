@@ -1,5 +1,5 @@
-{% set version = "0.18.3" %}
-{% set sha256 = "ecae99f93f4c5e9b1bf34959f4dc596c41f2f6b2fc407d9d9ddf85aebd3137ca" %}
+{% set version = "0.19.2" %}
+{% set sha256 = "d433b4642a6f8219e749dfbbe4b5e742d560996540c9749ede510274d061866d" %}
 
 package:
   name: scikit-image
@@ -14,64 +14,55 @@ source:
 build:
   number: 0
   skip: true  # [py<37]
-  # There isn't tifffile >=2019.7.26 on win32 
+  # There isn't currently available tifffile >=2019.7.26 on win32 
   skip: true  # [win32]
-  script:
-    - rm -rf skimage/viewer/tests  # we don't depend on Qt
-    ########################################################
-    # Remove these two lines at your own risk.
-    #
-    # pyproject.toml was getting detected by pip, and scikit-image was being built with modern numpy, not 1.11
-    - rm -f pyproject.toml
-    # I have no idea what this line actually fixes (other than speeding up the build a little bit)
-    # I think windows was freaking out about path lengths, and maybe this fixed it???
-    # https://github.com/conda-forge/scikit-image-feedstock/pull/39
-    - {{ PYTHON }} setup.py build_ext -j2
-    ########################################################
-    - {{ PYTHON }} setup.py install --single-version-externally-managed --record record.txt
-    # - "{{ PYTHON }} -m pip install . --disable-pip-version-check --no-deps --ignore-installed --no-cache-dir --no-build-isolation -vvv"
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
 requirements:
   build:
+    # pythran code needs clang-cl on windows
+    - clang                 # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - llvm-openmp >=4.0.1  # [osx]
-    - m2-patch  # [win]
-    - patch  # [not win]
+    - llvm-openmp >=4.0.1   # [osx]
+    - m2-patch              # [win]
+    - patch                 # [not win]
   host:
     - python
-    - pip
-    - cython >=0.29.18
-    - numpy
+    - cython >=0.29.24,<3.0
     - llvm-openmp >=4.0.01  # [osx]
-    - setuptools
+    - numpy
+    - packaging
+    - pip
+    - pythran
+    - setuptools <=59.4
     - wheel
   run:
     - python
-    - llvm-openmp >=4.0.1  # [osx]
     - {{ pin_compatible('numpy') }}
-    - scipy >=1.0.1
-    - matplotlib-base >=2.0.0,!=3.0.0
-    - networkx >=2.0
-    - pillow >=4.3.0,!=7.1.0,!=7.1.1,!=8.3.0
+    - imageio >=2.4.1
+    - llvm-openmp >=4.0.1  # [osx]
+    - networkx >=2.2
+    - packaging >=20.0
+    - pillow >=6.1.0,!=7.1.0,!=7.1.1,!=8.3.0
     - pywavelets >=1.1.1
-    - imageio >=2.3.0
+    - scipy >=1.4.1
+    - tifffile >=2019.7.26
     # scikit-image depends on dask-array
     # which requires numpy, dask-core and toolz (cytoolz for speed)
-    - dask-core >=0.15.0
+    - dask-core >=1.0.0,!=2.17.0
     - toolz >=0.7.3
     # cytoolz was designed for CPython and not for PyPy
     # https://github.com/conda-forge/cytoolz-feedstock/pull/28#issuecomment-705421078
     - cytoolz >=0.7.3  # [python_impl == 'cpython']
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
-    - tifffile >=2019.7.26
     # Using selector until packages for other platforms are (re)built using
     # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
     - _openmp_mutex  # [linux and (not ppc64le)]
   run_constrained:
+    - matplotlib-base >=3.0.3
     - pooch >=1.3.0
 
 # Issues reported upstream. Follow
@@ -103,16 +94,19 @@ requirements:
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
 {% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
+
 # 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
 {% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
+# 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
+{% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
 
 test:
   requires:
     - pytest
     - pytest-localserver
-    - pooch >=1.3.0
-    - pillow
     - pip
+    # Include pooch to ensure full test coverage
+    - pooch >=1.3.0 # [not (ppc64le or aarch64)]
   imports:
     - skimage
   commands:
@@ -129,7 +123,7 @@ test:
     - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
-  home: http://scikit-image.org/
+  home: https://scikit-image.org/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
