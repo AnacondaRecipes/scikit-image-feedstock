@@ -1,8 +1,10 @@
-{% set version = "0.19.2" %}
-{% set sha256 = "d433b4642a6f8219e749dfbbe4b5e742d560996540c9749ede510274d061866d" %}
+{% set name = "scikit-image" %}
+{% set version = "0.19.3" %}
+{% set sha256 = "24b5367de1762da6ee126dd8f30cc4e7efda474e0d7d70685433f0e3aa2ec450" %}
+{% set build_number = "0" %}
 
 package:
-  name: scikit-image
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -12,7 +14,7 @@ source:
     - skip-broken-tests.patch
 
 build:
-  number: 0
+  number: {{ build_number }}
   skip: true  # [py<37]
   # There isn't currently available tifffile >=2019.7.26 on win32 
   skip: true  # [win32]
@@ -43,7 +45,10 @@ requirements:
     - {{ pin_compatible('numpy') }}
     - imageio >=2.4.1
     - llvm-openmp >=4.0.1  # [osx]
-    - networkx >=2.2
+    # pin to older networkx<2.7 for Python 3.7 as it requires SciPy>=1.8 which
+    # is only available for Python>=3.8.
+    - networkx >=2.2,<2.7   # [py<=37]
+    - networkx >=2.2        # [py>37]
     - packaging >=20.0
     - pillow >=6.1.0,!=7.1.0,!=7.1.1,!=8.3.0
     - pywavelets >=1.1.1
