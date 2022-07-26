@@ -63,9 +63,7 @@ requirements:
     - cytoolz >=0.7.3  # [python_impl == 'cpython']
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
-    # Using selector until packages for other platforms are (re)built using
-    # newer "defaults" toolchains that use the `_openmp_mutex` mechanism.
-    - _openmp_mutex  # [linux and (not ppc64le)]
+    - _openmp_mutex  # [linux]
   run_constrained:
     - matplotlib-base >=3.0.3
     - pooch >=1.3.0
