@@ -17,7 +17,6 @@ build:
   number: {{ build_number }}
   skip: true  # [py<37]
   # There isn't currently available tifffile >=2019.7.26 on win32 
-  skip: true  # [win32]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
