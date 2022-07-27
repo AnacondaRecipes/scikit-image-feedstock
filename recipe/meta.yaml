@@ -16,7 +16,6 @@ source:
 build:
   number: {{ build_number }}
   skip: true  # [py<37]
-  # There isn't currently available tifffile >=2019.7.26 on win32 
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -33,8 +32,8 @@ requirements:
     - python
     - cython >=0.29.24,<3.0
     - llvm-openmp >=4.0.01  # [osx]
-    - numpy   1.19  # [py==38 or py==39]
-    - numpy   1.21  # [py==310]
+    - numpy   1.19  # [py<310]
+    - numpy   1.21  # [py>=310]
     - packaging
     - pip
     - pythran
