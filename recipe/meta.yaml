@@ -29,9 +29,15 @@ requirements:
     - pip
     - setuptools
     - wheel
-    - cython >=0.25,!=0.28.2,!=0.29.0
-    - numpy
+    - llvm-openmp >=4.0.1   # [osx]
+    - cython >=0.29.24,<3.0
+    - llvm-openmp >=4.0.01  # [osx]
+    - numpy   1.19  # [py<310]
+    - numpy   1.21  # [py>=310]
+    - packaging
+
   run:
+    - llvm-openmp >=4.0.1   # [osx]
     - python
     - {{ pin_compatible('numpy') }}
     - scipy >=0.19
