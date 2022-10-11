@@ -27,7 +27,7 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools <=59.4
     - wheel
     - llvm-openmp >=4.0.1   # [osx]
     - cython >=0.29.24,<3.0
@@ -42,7 +42,8 @@ requirements:
     - {{ pin_compatible('numpy') }}
     - scipy >=0.19
     - matplotlib >=2.0.0
-    - networkx >=2.0
+    - networkx >=2.2,<2.7   # [py<=37]
+    - networkx >=2.2        # [py>37]
     - pillow >=4.3.0
     - pywavelets >=0.4.0
     - imageio >=2.3.0
@@ -53,17 +54,65 @@ requirements:
     - cytoolz >=0.7.3
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
+    - _openmp_mutex  # [linux]
+
+{% set tests_to_skip = "_not_a_real_test" %}
+# https://github.com/scikit-image/scikit-image/issues/4774 - test_end_points fails on ppc64le with python 3.6, 3.7, 3.8 #4774
+{% set tests_to_skip = tests_to_skip + " or test_end_points" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4773 - test_RGB fails on ppc64le with python 3.7 #4773
+{% set tests_to_skip = tests_to_skip + " or test_RGB" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4772 - test_periodic_reference fails on ppc64le python 3.7 (conda feedstock) #4772
+{% set tests_to_skip = tests_to_skip + " or test_periodic_reference" %}  # [ppc64le or aarch64]
+# https://github.com/scikit-image/scikit-image/issues/4775 - test_hdx_rgb_roundtrip fail son osx with python 3.8 #4775
+{% set tests_to_skip = tests_to_skip + " or test_hdx_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
+# https://github.com/scikit-image/scikit-image/issues/4776 test_hed_rgb_roundtrip fails on osx with python3.8 and ppc64le with python 3.6 #4776
+{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
+# https://github.com/scikit-image/scikit-image/issues/4778 - test_hed_rgb_float_roundtrip fails on ppc64le python 3.8 #4778
+{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_float_roundtrip" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4781 - test_ellipse_rotated fails on python3.8 #4781
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_rotated" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4785 - test_fixed_reference fails on ppc64le with python 3.7 #4785
+{% set tests_to_skip = tests_to_skip + " or test_fixed_reference" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4782 - test_free_reference fails on ppc64le with python 3.6 #4782
+{% set tests_to_skip = tests_to_skip + " or test_free_reference" %}  # [ppc64le]
+# https://github.com/scikit-image/scikit-image/issues/4777 - test_uint16 fails on win #4777
+{% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
+# TODO: Report this upstream
+# It seems that the apply_parallel tests can have relatively small errors,
+# depending on underlying system; conda-forge has observed it on Windows, and
+# Anaconda has observed it on Windows, macOS, and Linux.
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
+
+# 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
+{% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
+{% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
+# TODO: Report this upstream
+# It seems that the apply_parallel tests can have relatively small errors,
+# depending on underlying system; conda-forge has observed it on Windows, and
+# Anaconda has observed it on Windows, macOS, and Linux.
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
+
+# 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
+{% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
 
 test:
   requires:
     - pytest
     - pytest-localserver
+    - pooch >=1.3.0 # [not (ppc64le or aarch64)]
   imports:
     - skimage
   commands:
+    - set OPENBLAS_NUM_THREADS=1          # [win]
+    - set OMP_NUM_THREADS=1               # [win]
+    - export OPENBLAS_NUM_THREADS=1       # [not win]
+    - export OMP_NUM_THREADS=1            # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
-    - pytest --pyargs skimage
+    # A warning in numpy that makes tests fail has been fixed in 0.18
+    # Remove this then.
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org/
