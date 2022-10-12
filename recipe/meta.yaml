@@ -13,14 +13,6 @@ source:
 build:
   number: 1
   skip: True  # [py==27]
-  script:
-    - for f in $(find . -name "*.pyx" -print); do echo "$f ..."; cython -3 -f $f || true; done # [unix]
-    - for /r . %%f in (*.pyx) do (  # [win]
-    - echo "fullname: %%f ..." # [win]
-    - cython -3 -f %%f || cmd /k "exit /b 0"  # [win]
-    - )  # [win]
-    - rm -rf skimage/viewer/tests  # we don't depend on Qt
-    - "{{ PYTHON }} -m pip install . --no-deps -vv"
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
