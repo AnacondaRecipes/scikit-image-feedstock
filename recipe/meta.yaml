@@ -110,6 +110,12 @@ requirements:
 # 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
 {% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
 
+{% set tests_to_skip = tests_to_skip + " or test_imageio_truncated_jpg" %}
+{% set tests_to_skip = tests_to_skip + " or test_imread_index_png_with_alpha" %}
+{% set tests_to_skip = tests_to_skip + " or test_imsave_boolean_input" %}
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}
+{% set tests_to_skip = tests_to_skip + " or test_extreme_palette or test_mark_boundaries_subpixel or test_3D" %}
+
 test:
   requires:
     - pytest
