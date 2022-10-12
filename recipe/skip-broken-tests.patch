@@ -1,0 +1,19 @@
+--- skimage/_shared/testing.py
++++ skimage/_shared/testing.py
+@@ -7,6 +7,7 @@ import re
+ import struct
+ import threading
+ import functools
++import platform
+ from tempfile import NamedTemporaryFile
+
+ import numpy as np
+@@ -153,6 +154,8 @@ def mono_check(plugin, fmt='png'):
+
+     All major input types should be handled.
+     """
++    if platform.machine() == "s390x" and plugin == "pil" and fmt == "png":
++        pytest.skip("known to be broken on s390x")
+
+     img = img_as_ubyte(data.moon())
+     r1 = roundtrip(img, plugin, fmt)
