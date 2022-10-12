@@ -7,9 +7,8 @@ package:
 source:
   url: https://pypi.io/packages/source/s/scikit-image/scikit-image-{{ version }}.tar.gz
   sha256: dd7fbd32da74d4e9967dc15845f731f16e7966cee61f5dc0e12e2abb1305068c
-  # url: https://github.com/scikit-image/scikit-image/archive/v{{ version }}.tar.gz
-  # fn: scikit-image-{{ version }}.tar.gz
-  # sha256: 3b8414ccb9b524d0d507909e9a4d3843af6ca9919152199d380f2b21639abf17
+  patches:
+    - skip-broken-tests.patch
 
 build:
   number: 1
@@ -24,6 +23,9 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
+    - llvm-openmp >=4.0.1   # [osx]
+    - m2-patch              # [win]
+    - patch                 # [not win]
   host:
     - python
     - pip
