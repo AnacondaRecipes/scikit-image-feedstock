@@ -37,6 +37,13 @@ requirements:
     - numpy   1.19  # [py<310]
     - numpy   1.21  # [py>=310]
     - packaging
+    - scipy >=0.19.0
+    - matplotlib >=2.0.0,!=3.0.0
+    - networkx >=2.2,<2.7   # [py<=37]
+    - networkx >=2.2        # [py>37]
+    - pillow >=4.3.0
+    - imageio >=2.3.0
+    - pywavelets >=0.4.0
 
   run:
     - llvm-openmp >=4.0.1   # [osx]
@@ -46,6 +53,7 @@ requirements:
     - matplotlib >=2.0.0
     - networkx >=2.2,<2.7   # [py<=37]
     - networkx >=2.2        # [py>37]
+    - packaging >=20.0
     - pillow >=4.3.0
     - pywavelets >=0.4.0
     - imageio >=2.3.0
@@ -57,6 +65,11 @@ requirements:
     # cloudpickle is necessary to provide the 'processes' scheduler for dask
     - cloudpickle >=0.2.1
     - _openmp_mutex  # [linux]
+    - tifffile >=2019.7.26
+    # scikit-image depends on dask-array
+    # which requires numpy, dask-core and toolz (cytoolz for speed)
+    - dask-core >=1.0.0,!=2.17.0
+    - toolz >=0.7.3
 
 {% set tests_to_skip = "_not_a_real_test" %}
 # https://github.com/scikit-image/scikit-image/issues/4774 - test_end_points fails on ppc64le with python 3.6, 3.7, 3.8 #4774
