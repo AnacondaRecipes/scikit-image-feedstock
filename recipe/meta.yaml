@@ -112,6 +112,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_imsave_boolean_input" %}
 {% set tests_to_skip = tests_to_skip + " or test_all_mono" %}
 {% set tests_to_skip = tests_to_skip + " or test_extreme_palette or test_mark_boundaries_subpixel or test_3D" %}
+{% set tests_to_skip = tests_to_skip + " or test_crop or test_color_histogram or test_rect_tool" %}  # [win]
 
 test:
   requires:
@@ -130,7 +131,7 @@ test:
     # A warning in numpy that makes tests fail has been fixed in 0.18
     # Remove this then.
     - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
-    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" && pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org/
