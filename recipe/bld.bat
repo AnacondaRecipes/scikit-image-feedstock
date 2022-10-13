@@ -18,5 +18,5 @@ REM don't add d1trimfile option because clang doesn't recognize it.
 set "SRC_DIR="
 
 rmdir /s /q skimage/viewer/tests 
-%PYTHON% -m pip install . --no-deps -vv
+%PYTHON% -m pip install . -vv
 
