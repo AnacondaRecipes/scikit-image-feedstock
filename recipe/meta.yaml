@@ -9,6 +9,7 @@ source:
   sha256: dd7fbd32da74d4e9967dc15845f731f16e7966cee61f5dc0e12e2abb1305068c
   patches:
     - skip-broken-tests.patch
+    - tifffile.patch  # [win]
 
 build:
   number: 1

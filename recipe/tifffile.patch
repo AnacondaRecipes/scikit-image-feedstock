@@ -1,0 +1,17 @@
+Index: scikit-image-0.16.2/skimage/external/tifffile/tifffile.c
+===================================================================
+--- scikit-image-0.16.2.orig/skimage/external/tifffile/tifffile.c
++++ scikit-image-0.16.2/skimage/external/tifffile/tifffile.c
+@@ -122,6 +122,12 @@ typedef union {
+    uint64_t i;
+ } u_uint64;
+ 
++#ifndef ssize_t
++#if defined(_WIN64)
++ typedef __int64 ssize_t;
++#endif
++#endif
++
+ typedef struct {
+     ssize_t len;
+     char* str;
