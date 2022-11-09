@@ -45,6 +45,7 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - imageio >=2.16.2
+    - llvm-openmp >=4.0.1  # [osx]
     # pin to older networkx<2.7 for Python 3.7 as it requires SciPy>=1.8 which
     # is only available for Python>=3.8
     # https://github.com/conda-forge/scikit-image-feedstock/pull/91
