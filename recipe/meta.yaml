@@ -20,6 +20,11 @@ build:
   skip: true  # [py<37]
   entry_points:
     - skivi = skimage.scripts.skivi:main
+  missing_dso_whitelist:
+    - "*/libc++.1.dylib" # [osx]
+    - "*/libomp.dylib"   # [osx]
+  ignore_run_exports:
+    - llvm-openmp        # [osx]
 
 requirements:
   build:
