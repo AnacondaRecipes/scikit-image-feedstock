@@ -2,7 +2,7 @@
 {% set version = "0.19.3" %}
 {% set sha256 = "24b5367de1762da6ee126dd8f30cc4e7efda474e0d7d70685433f0e3aa2ec450" %}
 
-{% set build_number = "1" %}
+{% set build_number = "2" %}
 
 
 package:
@@ -36,7 +36,8 @@ requirements:
     - cython >=0.29.24,<3.0
     - llvm-openmp >=4.0.01  # [osx]
     - numpy   1.19  # [py<310]
-    - numpy   1.21  # [py>=310]
+    - numpy   1.21  # [py==310]
+    - numpy   1.23  # [py>=311]
     - packaging
     - pip
     - pythran
