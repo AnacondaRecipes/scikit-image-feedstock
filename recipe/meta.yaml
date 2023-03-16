@@ -1,8 +1,8 @@
 {% set name = "scikit-image" %}
-{% set version = "0.19.3" %}
-{% set sha256 = "24b5367de1762da6ee126dd8f30cc4e7efda474e0d7d70685433f0e3aa2ec450" %}
+{% set version = "0.20.0" %}
+{% set sha256 = "e1076d7dc26e2b2f7bfc49866251c6e4999aaf9ada47fc79d24b64ab22c40954" %}
 
-{% set build_number = "2" %}
+{% set build_number = "0" %}
 
 
 package:
@@ -17,7 +17,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: true  # [py<37]
+  skip: true  # [py<38]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -33,30 +33,30 @@ requirements:
     - patch                 # [not win]
   host:
     - python
-    - cython >=0.29.24,<3.0
+    - cython >=0.29.24
     - llvm-openmp >=4.0.01  # [osx]
-    - numpy   1.19  # [py<310]
-    - numpy   1.21  # [py==310]
-    - numpy   1.23  # [py>=311]
+    - numpy   1.21.1  # [py<310]
+    - numpy   1.21.6  # [py==310]
+    - numpy   1.23.3  # [py>=311]
     - packaging
     - pip
     - pythran
-    - setuptools <=59.4
+    - setuptools >=67.0.0
     - wheel
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - imageio >=2.16.2
+    - imageio >=2.4.1
+    - lazy_loader >=0.1.0
     - llvm-openmp >=4.0.1  # [osx]
     # pin to older networkx<2.7 for Python 3.7 as it requires SciPy>=1.8 which
     # is only available for Python>=3.8
     # https://github.com/conda-forge/scikit-image-feedstock/pull/91
-    - networkx >=2.2,<2.7   # [py<=37]
-    - networkx >=2.2        # [py>37]
+    - networkx >=2.8
     - packaging >=20.0
-    - pillow >=6.1.0,!=7.1.0,!=7.1.1,!=8.3.0
+    - pillow >=9.0.1
     - pywavelets >=1.1.1
-    - scipy >=1.4.1
+    - scipy >=1.8.0
     - tifffile >=2019.7.26
     # scikit-image depends on dask-array
     # which requires numpy, dask-core and toolz (cytoolz for speed)
@@ -69,7 +69,7 @@ requirements:
     - cloudpickle >=0.2.1
     - _openmp_mutex  # [linux]
   run_constrained:
-    - matplotlib-base >=3.0.3
+    - matplotlib-base >=3.3.0
     - pooch >=1.3.0
 
 # Issues reported upstream. Follow
@@ -136,9 +136,9 @@ about:
   license_file: LICENSE.txt
   summary: Image processing in Python.
   description: |
-    scikit-image is a collection of algorithms for image processing. 
-    It is available free of charge and free of restriction. 
-    We pride ourselves on high-quality, peer-reviewed code, 
+    scikit-image is a collection of algorithms for image processing.
+    It is available free of charge and free of restriction.
+    We pride ourselves on high-quality, peer-reviewed code,
     written by an active community of volunteers.
   dev_url: https://github.com/scikit-image/scikit-image
   doc_url: https://scikit-image.org/docs/stable/
