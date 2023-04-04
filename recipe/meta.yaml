@@ -106,6 +106,8 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
 # 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
 {% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
+# 2023/4/4: scikit-image 0.20.0 tests "test_analytical_moments_calculation"  https://github.com/scikit-image/scikit-image/issues/6865
+{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
 
 test:
   requires:
