@@ -43,6 +43,7 @@ requirements:
     - wheel
     - meson-python 0.12.1
     - lazy_loader >=0.1
+    - meson >=0.63.0,<1.0
   run:
     - python
     - {{ pin_compatible('numpy') }}
