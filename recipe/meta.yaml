@@ -26,6 +26,7 @@ requirements:
   build:
     # pythran code needs clang-cl on windows
     - clang                 # [win]
+    - lld     # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - llvm-openmp >=4.0.1   # [osx]
@@ -43,7 +44,6 @@ requirements:
     - wheel
     - meson-python 0.12.1
     - lazy_loader >=0.1
-    - meson >=0.63.0,<1.0
   run:
     - python
     - {{ pin_compatible('numpy') }}
