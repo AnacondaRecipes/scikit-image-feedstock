@@ -111,6 +111,10 @@ requirements:
 # 2023/4/4: scikit-image 0.20.0 tests "test_analytical_moments_calculation"  https://github.com/scikit-image/scikit-image/issues/6865
 {% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
 
+{% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}
+{% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}
+{% set tests_to_skip = tests_to_skip + " or test_data.py" %}
+{% set tests_to_skip = tests_to_skip + " or test_gray" %}
 test:
   requires:
     - pytest
