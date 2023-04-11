@@ -110,7 +110,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
 # 2023/4/4: scikit-image 0.20.0 tests "test_analytical_moments_calculation"  https://github.com/scikit-image/scikit-image/issues/6865
 {% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
-
+# The set of tests below are skipped for successful build. there is a librarry upstream that is missing that causes these tests to fail.
 {% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}
 {% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}
 {% set tests_to_skip = tests_to_skip + " or test_data.py" %}
