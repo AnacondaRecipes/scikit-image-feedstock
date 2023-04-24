@@ -36,7 +36,8 @@ requirements:
     - python
     - cython >=0.29.24
     - llvm-openmp >=4.0.01  # [osx]
-    - numpy {{ numpy }}
+    - numpy 1.21  # [py<311]
+    - numpy 1.23  # [py>=311]
     - packaging
     - pip
     - pythran
