@@ -51,9 +51,6 @@ requirements:
     - imageio >=2.4.1
     - lazy_loader >=0.1
     - llvm-openmp >=4.0.1  # [osx]
-    # pin to older networkx<2.7 for Python 3.7 as it requires SciPy>=1.8 which
-    # is only available for Python>=3.8
-    # https://github.com/conda-forge/scikit-image-feedstock/pull/91
     - networkx >=2.8
     - packaging >=20.0
     - pillow >=9.0.1
