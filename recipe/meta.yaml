@@ -107,11 +107,11 @@ requirements:
 # The set of tests below are skipped for successful build.
 # There is a library upstream that is missing that causes these
 # tests to fail.
-{% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}
-{% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}
-{% set tests_to_skip = tests_to_skip + " or test_data.py" %}
-{% set tests_to_skip = tests_to_skip + " or test_gray" %}
-{% set tests_to_skip = tests_to_skip + " or test_shapes" %}
+{% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}    #  [win]
+{% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}    #  [win]
+{% set tests_to_skip = tests_to_skip + " or test_data.py" %}    #  [win]
+{% set tests_to_skip = tests_to_skip + " or test_gray" %}    #  [win]
+{% set tests_to_skip = tests_to_skip + " or test_shapes" %}    #  [win]
 test:
   requires:
     - pytest
