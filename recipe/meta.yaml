@@ -35,7 +35,7 @@ requirements:
   host:
     - python
     - cython >=0.29.24
-    - llvm-openmp >=4.0.01  # [osx]
+    - llvm-openmp 14.0.6  # [osx]
     - numpy 1.21  # [py<311]
     - numpy 1.23  # [py>=311]
     - packaging
