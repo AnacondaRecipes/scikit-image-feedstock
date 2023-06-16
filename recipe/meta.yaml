@@ -1,22 +1,18 @@
 {% set name = "scikit-image" %}
-{% set version = "0.20.0" %}
-{% set sha256 = "e1076d7dc26e2b2f7bfc49866251c6e4999aaf9ada47fc79d24b64ab22c40954" %}
-
-{% set build_number = "0" %}
-
+{% set version = "0.21.0" %}
 
 package:
-  name: {{ name }}
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/scikit-image/scikit-image/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  url: https://github.com/{{ name|lower }}/{{ name|lower }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 53a82a9dbd3ed608d2ad3876269a271a7e922b12e228388eac996b508aadd652
   patches:
     - skip-broken-tests.patch
 
 build:
-  number: {{ build_number }}
+  number: 0
   skip: true  # [py<38]
   entry_points:
     - skivi = skimage.scripts.skivi:main
