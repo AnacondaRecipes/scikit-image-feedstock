@@ -17,48 +17,44 @@ build:
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
-
 requirements:
   build:
     # pythran code needs clang-cl on windows
     - clang                 # [win]
-    - lld     # [win]
+    - lld                   # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - llvm-openmp >=4.0.1   # [osx]
     - m2-patch              # [win]
     - patch                 # [not win]
   host:
     - python
-    - cython >=0.29.24
-    - llvm-openmp 14.0.6  # [osx]
-    - numpy 1.21  # [py<311]
-    - numpy 1.23  # [py>=311]
-    - packaging
+    - cython 0.29.32
+    - numpy 1.22.3          # [py310 and win]
+    - numpy {{ numpy }}     # [not (py310 and win)]
+    - packaging 23.0
     - pip
-    - pythran
+    - pythran 0.12.1
     - setuptools
     - wheel
-    - meson-python 0.12.1
-    - lazy_loader >=0.1
+    - meson-python 0.13.1
+    - lazy_loader >=0.2
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - imageio >=2.4.1
-    - lazy_loader >=0.1
-    - llvm-openmp >=4.0.1  # [osx]
+    - imageio >=2.27
+    - lazy_loader >=0.2
     - networkx >=2.8
-    - packaging >=20.0
     - pillow >=9.0.1
     - pywavelets >=1.1.1
-    - scipy >=1.8.0   #  [py>39]
-    - scipy >=1.8,<1.9.2   #  [py<=39]
-    - tifffile >=2019.7.26
+    - scipy >=1.8.0        # [py>39]
+    - scipy >=1.8,<1.9.2   # [py<=39]
+    - tifffile >=2022.8.12
     - dask-core >=1.0.0,!=2.17.0
     - toolz >=0.7.3
-    - cytoolz >=0.7.3  # [python_impl == 'cpython']
+    - cytoolz >=0.7.3      # [python_impl == 'cpython']
     - cloudpickle >=0.2.1
-    - _openmp_mutex  # [linux]
+    - _openmp_mutex        # [linux]
+    - packaging>=21
   run_constrained:
     - matplotlib-base >=3.3
     - pooch >=1.3.0
@@ -110,11 +106,12 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_shapes" %}    #  [win]
 test:
   requires:
-    - pytest
-    - pytest-localserver
-    - pip
     # Include pooch to ensure full test coverage
     - pooch >=1.3.0 # [not (ppc64le or aarch64)]
+    - pytest >=7.0
+    - pytest-cov >=2.11.0
+    - pytest-localserver
+    - pip
   imports:
     - skimage
   commands:
