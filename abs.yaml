@@ -2,4 +2,5 @@ channels:
   - https://staging.continuum.io/prefect/fs/lazy_loader-feedstock/pr4/4099ef6
   - https://staging.continuum.io/prefect/fs/imageio-feedstock/pr22/161b4bf
   - https://staging.continuum.io/prefect/fs/pooch-feedstock/pr6/af8b638
+  - https://staging.continuum.io/prefect/fs/libdeflate-feedstock/pr5/773a7c1
 
