@@ -77,20 +77,11 @@ requirements:
 # https://github.com/scikit-image/scikit-image/issues/6994
 {% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}          # [s390x]
 
-# These seem to fail and seem generally flaky
+# numpy 1.25 related issues https://github.com/scikit-image/scikit-image/pull/6970
 {% set tests_to_skip = tests_to_skip + " or test_subpix_border" %}                            # [linux and x86_64]
 {% set tests_to_skip = tests_to_skip + " or test_max_tree" %}                                 # [linux and x86_64]
 {% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_0" %}  # [linux and x86_64]
 {% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_1" %}  # [linux and x86_64]
-
-# # An issue with libdeflate used by imagecodecs:
-# # imagecodecs._deflate.DeflateError: libdeflate_zlib_decompress returned LIBDEFLATE_BAD_DATA
-# # try backporting this to deflate? https://github.com/ebiggers/libdeflate/pull/326
-# {% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}    #  [win]
-# {% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}    #  [win]
-# {% set tests_to_skip = tests_to_skip + " or test_data.py" %}    #  [win]
-# {% set tests_to_skip = tests_to_skip + " or test_gray" %}    #  [win]
-# {% set tests_to_skip = tests_to_skip + " or test_shapes" %}    #  [win]
 
 test:
   requires:
