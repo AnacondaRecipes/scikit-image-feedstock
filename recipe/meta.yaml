@@ -1,6 +1,6 @@
 {% set name = "scikit-image" %}
-{% set version = "0.20.0" %}
-{% set sha256 = "e1076d7dc26e2b2f7bfc49866251c6e4999aaf9ada47fc79d24b64ab22c40954" %}
+{% set version = "0.21.0" %}
+{% set sha256 = "53a82a9dbd3ed608d2ad3876269a271a7e922b12e228388eac996b508aadd652" %}
 
 {% set build_number = "0" %}
 
@@ -29,96 +29,67 @@ requirements:
     - lld     # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - llvm-openmp >=4.0.1   # [osx]
     - m2-patch              # [win]
     - patch                 # [not win]
   host:
     - python
-    - cython >=0.29.24
-    - llvm-openmp 14.0.6  # [osx]
-    - numpy 1.21  # [py<311]
-    - numpy 1.23  # [py>=311]
+    - cython >=0.29.32
+    - numpy {{ numpy }}
     - packaging
     - pip
     - pythran
-    - setuptools
-    - wheel
-    - meson-python 0.12.1
-    - lazy_loader >=0.1
+    - meson-python >=0.13
+    - lazy_loader >=0.2
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - imageio >=2.4.1
-    - lazy_loader >=0.1
-    - llvm-openmp >=4.0.1  # [osx]
+    - scipy >=1.8
     - networkx >=2.8
-    - packaging >=20.0
     - pillow >=9.0.1
+    - imageio >=2.27
+    - tifffile >=2022.8.12
     - pywavelets >=1.1.1
-    - scipy >=1.8.0   #  [py>39]
-    - scipy >=1.8,<1.9.2   #  [py<=39]
-    - tifffile >=2019.7.26
-    - dask-core >=1.0.0,!=2.17.0
-    - toolz >=0.7.3
-    - cytoolz >=0.7.3  # [python_impl == 'cpython']
+    - packaging >=21
+    - lazy_loader >=0.2
+    - dask-core >=2021.1.0
     - cloudpickle >=0.2.1
     - _openmp_mutex  # [linux]
   run_constrained:
-    - matplotlib-base >=3.3
-    - pooch >=1.3.0
-    - astropy >=3.1.2
-
-# Issues reported upstream. Follow
-# https://github.com/scikit-image/scikit-image/issues/4768
+    - matplotlib-base >=3.5
+    - pooch >=1.6.0
+    - astropy >=5.0
+    - scikit-learn >=0.24.0
 
 {% set tests_to_skip = "_not_a_real_test" %}
-# https://github.com/scikit-image/scikit-image/issues/4774 - test_end_points fails on ppc64le with python 3.6, 3.7, 3.8 #4774
-{% set tests_to_skip = tests_to_skip + " or test_end_points" %}  # [ppc64le or aarch64]
-# https://github.com/scikit-image/scikit-image/issues/4773 - test_RGB fails on ppc64le with python 3.7 #4773
-{% set tests_to_skip = tests_to_skip + " or test_RGB" %}  # [ppc64le or aarch64]
-# https://github.com/scikit-image/scikit-image/issues/4772 - test_periodic_reference fails on ppc64le python 3.7 (conda feedstock) #4772
-{% set tests_to_skip = tests_to_skip + " or test_periodic_reference" %}  # [ppc64le or aarch64]
-# https://github.com/scikit-image/scikit-image/issues/4775 - test_hdx_rgb_roundtrip fail son osx with python 3.8 #4775
-# {% set tests_to_skip = tests_to_skip + " or test_hdx_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
-# # https://github.com/scikit-image/scikit-image/issues/4776 test_hed_rgb_roundtrip fails on osx with python3.8 and ppc64le with python 3.6 #4776
-{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_roundtrip" %}  # [ppc64le or aarch64 or osx]
-# https://github.com/scikit-image/scikit-image/issues/4778 - test_hed_rgb_float_roundtrip fails on ppc64le python 3.8 #4778
-{% set tests_to_skip = tests_to_skip + " or test_hed_rgb_float_roundtrip" %}  # [ppc64le]
-# https://github.com/scikit-image/scikit-image/issues/4781 - test_ellipse_rotated fails on python3.8 #4781
-{% set tests_to_skip = tests_to_skip + " or test_ellipse_rotated" %}  # [ppc64le]
-# https://github.com/scikit-image/scikit-image/issues/4785 - test_fixed_reference fails on ppc64le with python 3.7 #4785
-{% set tests_to_skip = tests_to_skip + " or test_fixed_reference" %}  # [ppc64le]
-# https://github.com/scikit-image/scikit-image/issues/4782 - test_free_reference fails on ppc64le with python 3.6 #4782
-{% set tests_to_skip = tests_to_skip + " or test_free_reference" %}  # [ppc64le]
-# https://github.com/scikit-image/scikit-image/issues/4777 - test_uint16 fails on win #4777
-{% set tests_to_skip = tests_to_skip + " or test_uint16" %}  # [win]
+
 # TODO: Report this upstream
 # It seems that the apply_parallel tests can have relatively small errors,
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
-{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %} # [osx and x86_64]
 
-# 2021/11/03: scikit-image 0.18.3 tests "filters/tests/test_thresholding.py" and "io/tests/test_mpl_imshow.py" failed only on win64
-{% set tests_to_skip = tests_to_skip + " or test_thresholding or test_mpl_imshow" %}  # [win64]
-# 2022/03/18: scikit-image 0.19.2 tests "future/graph/tests/test_rag.py" failed on win and unix
-{% set tests_to_skip = tests_to_skip + " or test_cut_normalized or test_ncut_stable_subgraph or test_reproducibility" %}
-# 2023/4/4: scikit-image 0.20.0 tests "test_analytical_moments_calculation"  https://github.com/scikit-image/scikit-image/issues/6865
+# https://github.com/scikit-image/scikit-image/issues/6865
 {% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
-# The set of tests below are skipped for successful build.
-# There is a library upstream that is missing that causes these
-# tests to fail.
-{% set tests_to_skip = tests_to_skip + " or test_rolling_ball" %}    #  [win]
-{% set tests_to_skip = tests_to_skip + " or test_blur_effect" %}    #  [win]
-{% set tests_to_skip = tests_to_skip + " or test_data.py" %}    #  [win]
-{% set tests_to_skip = tests_to_skip + " or test_gray" %}    #  [win]
-{% set tests_to_skip = tests_to_skip + " or test_shapes" %}    #  [win]
+
+# https://github.com/scikit-image/scikit-image/issues/7061
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
+
+# https://github.com/scikit-image/scikit-image/issues/6994
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}          # [s390x]
+
+# numpy 1.25 related issues https://github.com/scikit-image/scikit-image/pull/6970
+{% set tests_to_skip = tests_to_skip + " or test_subpix_border" %}                            # [linux and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_max_tree" %}                                 # [linux and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_0" %}  # [linux and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_1" %}  # [linux and x86_64]
+
 test:
   requires:
     - pytest
     - pytest-localserver
     - pip
     # Include pooch to ensure full test coverage
-    - pooch >=1.3.0 # [not (ppc64le or aarch64)]
+    - pooch >=1.6.0
   imports:
     - skimage
   commands:
