@@ -108,8 +108,8 @@ test:
 
 about:
   home: https://scikit-image.org/
-  license: BSD-3-Clause
-  license_family: BSD
+  license: BSD-3-Clause AND MIT and BSD-2-Clause
+  license_family: Other
   license_file: LICENSE.txt
   summary: Image processing in Python.
   description: |
