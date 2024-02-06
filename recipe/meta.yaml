@@ -1,6 +1,6 @@
 {% set name = "scikit-image" %}
-{% set version = "0.21.0" %}
-{% set sha256 = "53a82a9dbd3ed608d2ad3876269a271a7e922b12e228388eac996b508aadd652" %}
+{% set version = "0.22.0" %}
+{% set sha256 = "2875c81ffb224f9f25a1274734b502fb993cc729a2c790009d38035e52e6a123" %}
 
 {% set build_number = "0" %}
 
@@ -17,7 +17,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: true  # [py<38]
+  skip: true  # [py<39]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -33,24 +33,23 @@ requirements:
     - patch                 # [not win]
   host:
     - python
-    - cython >=0.29.32
+    - cython >=0.29.32,<3
     - numpy {{ numpy }}
     - packaging
     - pip
     - pythran
-    - meson-python >=0.13
-    - lazy_loader >=0.2
+    - meson-python
+    - lazy_loader >=0.3
   run:
     - python
-    - {{ pin_compatible('numpy') }}
+    - {{ pin_compatible('numpy', lower_bound='1.22') }}
     - scipy >=1.8
     - networkx >=2.8
     - pillow >=9.0.1
     - imageio >=2.27
     - tifffile >=2022.8.12
-    - pywavelets >=1.1.1
     - packaging >=21
-    - lazy_loader >=0.2
+    - lazy_loader >=0.3
     - dask-core >=2021.1.0
     - cloudpickle >=0.2.1
     - _openmp_mutex  # [linux]
@@ -58,7 +57,8 @@ requirements:
     - matplotlib-base >=3.5
     - pooch >=1.6.0
     - astropy >=5.0
-    - scikit-learn >=0.24.0
+    - scikit-learn >=1.1
+    - pywavelets >=1.1.1
 
 {% set tests_to_skip = "_not_a_real_test" %}
 
@@ -77,19 +77,22 @@ requirements:
 # https://github.com/scikit-image/scikit-image/issues/6994
 {% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}          # [s390x]
 
-# numpy 1.25 related issues https://github.com/scikit-image/scikit-image/pull/6970
-{% set tests_to_skip = tests_to_skip + " or test_subpix_border" %}                            # [linux and x86_64]
-{% set tests_to_skip = tests_to_skip + " or test_max_tree" %}                                 # [linux and x86_64]
-{% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_0" %}  # [linux and x86_64]
-{% set tests_to_skip = tests_to_skip + " or test_offsets_to_raveled_neighbors_explicit_1" %}  # [linux and x86_64]
-
 test:
+  source_files:
+    - pyproject.toml
   requires:
-    - pytest
-    - pytest-localserver
     - pip
-    # Include pooch to ensure full test coverage
     - pooch >=1.6.0
+    - asv
+    - matplotlib-base
+    - pywavelets
+    - scikit-learn
+    - numpydoc >=1.5
+    - pooch
+    - pytest >=7.0
+    - pytest-cov >=2.11.0
+    - pytest-localserver
+    #- pytest-faulthandler
   imports:
     - skimage
   commands:
@@ -100,8 +103,6 @@ test:
     - export OMP_NUM_THREADS=1            # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
-    # A warning in numpy that makes tests fail has been fixed in 0.18
-    # Remove this then.
     - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
     - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
