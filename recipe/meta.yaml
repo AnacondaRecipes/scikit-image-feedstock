@@ -50,8 +50,6 @@ requirements:
     - tifffile >=2022.8.12
     - packaging >=21
     - lazy_loader >=0.3
-    - dask-core >=2021.1.0
-    - cloudpickle >=0.2.1
     - _openmp_mutex  # [linux]
   run_constrained:
     - matplotlib-base >=3.5
@@ -59,6 +57,8 @@ requirements:
     - astropy >=5.0
     - scikit-learn >=1.1
     - pywavelets >=1.1.1
+    - cloudpickle >=0.2.1
+    - dask-core >=2021.1.0
 
 {% set tests_to_skip = "_not_a_real_test" %}
 
