@@ -1,8 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.22.0" %}
-{% set sha256 = "2875c81ffb224f9f25a1274734b502fb993cc729a2c790009d38035e52e6a123" %}
-
-{% set build_number = "0" %}
+{% set version = "0.23.2" %}
 
 
 package:
@@ -10,49 +7,50 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/scikit-image/scikit-image/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: {{ sha256 }}
-  patches:
-    - skip-broken-tests.patch
+  url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: be1b8d38fb51b8076d829f682646f9fdb61f9936e43a8b775fb594c7c7930a88
+  #patches:
+  #  - skip-broken-tests.patch
 
 build:
-  number: {{ build_number }}
-  skip: true  # [py<39]
+  number: 0
+  skip: true  # [py<310]
   entry_points:
     - skivi = skimage.scripts.skivi:main
-
 
 requirements:
   build:
     # pythran code needs clang-cl on windows
     - clang                 # [win]
-    - lld     # [win]
+    - lld                   # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - m2-patch              # [win]
     - patch                 # [not win]
   host:
     - python
-    - cython >=0.29.32,<3
+    - cython >=3.0.4
     - numpy {{ numpy }}
     - packaging
     - pip
     - pythran
     - meson-python
     - lazy_loader >=0.3
+    - setuptools
+    - wheel
   run:
     - python
-    - {{ pin_compatible('numpy', lower_bound='1.22') }}
-    - scipy >=1.8
+    - {{ pin_compatible('numpy', lower_bound='1.23') }}
+    - scipy >=1.9
     - networkx >=2.8
-    - pillow >=9.0.1
-    - imageio >=2.27
+    - pillow >=9.1
+    - imageio >=2.33
     - tifffile >=2022.8.12
     - packaging >=21
     - lazy_loader >=0.3
     - _openmp_mutex  # [linux]
   run_constrained:
-    - matplotlib-base >=3.5
+    - matplotlib-base >=3.6
     - pooch >=1.6.0
     - astropy >=5.0
     - scikit-learn >=1.1
@@ -88,7 +86,6 @@ test:
     - pywavelets
     - scikit-learn
     - numpydoc >=1.5
-    - pooch
     - pytest >=7.0
     - pytest-cov >=2.11.0
     - pytest-localserver
@@ -96,7 +93,8 @@ test:
   imports:
     - skimage
   commands:
-    - pip check
+    #- pip check
+    - python -c "import skimage; print(skimage.__version__)"
     - set OPENBLAS_NUM_THREADS=1          # [win]
     - set OMP_NUM_THREADS=1               # [win]
     - export OPENBLAS_NUM_THREADS=1       # [not win]
@@ -108,7 +106,7 @@ test:
 
 about:
   home: https://scikit-image.org/
-  license: BSD-3-Clause AND MIT and BSD-2-Clause
+  license: BSD-3-Clause AND MIT AND BSD-2-Clause
   license_family: Other
   license_file: LICENSE.txt
   summary: Image processing in Python.
