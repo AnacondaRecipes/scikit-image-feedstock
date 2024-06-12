@@ -23,8 +23,6 @@ requirements:
     - lld                   # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - m2-patch              # [win]
-    - patch                 # [not win]
   host:
     - python
     - cython >=3.0.4
