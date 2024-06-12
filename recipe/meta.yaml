@@ -9,8 +9,6 @@ package:
 source:
   url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
   sha256: be1b8d38fb51b8076d829f682646f9fdb61f9936e43a8b775fb594c7c7930a88
-  #patches:
-  #  - skip-broken-tests.patch
 
 build:
   number: 0
@@ -47,7 +45,7 @@ requirements:
     - imageio >=2.33
     - tifffile >=2022.8.12
     - packaging >=21
-    - lazy_loader >=0.3
+    - lazy_loader >=0.4
     - _openmp_mutex  # [linux]
   run_constrained:
     - matplotlib-base >=3.6
@@ -73,9 +71,14 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
 
 # https://github.com/scikit-image/scikit-image/issues/6994
-{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}          # [s390x]
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}  # [linux and s390x]
+
+# known to be broken on s390x: if platform.machine() == "s390x" and plugin == "pil" and fmt == "png"
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}          # [linux and s390x]
 
 test:
+  imports:
+    - skimage
   source_files:
     - pyproject.toml
   requires:
@@ -85,15 +88,15 @@ test:
     - matplotlib-base
     - pywavelets
     - scikit-learn
-    - numpydoc >=1.5
+    - numpydoc >=1.7
     - pytest >=7.0
     - pytest-cov >=2.11.0
     - pytest-localserver
+    - astropy >=5.0
+    - dask-core >=2021.1.0
     #- pytest-faulthandler
-  imports:
-    - skimage
   commands:
-    #- pip check
+    - pip check
     - python -c "import skimage; print(skimage.__version__)"
     - set OPENBLAS_NUM_THREADS=1          # [win]
     - set OMP_NUM_THREADS=1               # [win]
