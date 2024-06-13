@@ -1,6 +1,0 @@
-channels:
-  - https://staging.continuum.io/prefect/fs/alabaster-feedstock/pr2/f30b97b
-  - https://staging.continuum.io/prefect/fs/sphinxcontrib-serializinghtml-feedstock/pr3/865ced1
-  - https://staging.continuum.io/prefect/fs/sphinx-feedstock/pr17/3749e04
-  - https://staging.continuum.io/prefect/fs/numpydoc-feedstock/pr4/903557a
-  - https://staging.continuum.io/prefect/fs/lazy_loader-feedstock/pr5/fe14922
