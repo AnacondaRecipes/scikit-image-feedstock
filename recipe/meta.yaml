@@ -94,9 +94,14 @@ test:
     - astropy >=5.0
     - dask-core >=2021.1.0
     #- pytest-faulthandler
+    # RuntimeWarning: networkx backend defined more than once: nx-loopback,
+    # see https://github.com/networkx/networkx/issues/7101 and https://github.com/python/importlib_metadata/pull/381/files
+    - importlib_metadata >=4.11.4  # [py<310]
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
+    # Check if the nx-loopback entry point is registered twice
+    - python -c "from importlib.metadata import entry_points; print(entry_points()['networkx.backends'])"  # [py<310]
     - set OPENBLAS_NUM_THREADS=1          # [win]
     - set OMP_NUM_THREADS=1               # [win]
     - export OPENBLAS_NUM_THREADS=1       # [not win]
