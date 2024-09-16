@@ -1,0 +1,46 @@
+From f73c5ebb19b9e9b5e7ae61ed174ed34c40d54907 Mon Sep 17 00:00:00 2001
+From: Serhii Kupriienko
+Date: Mon, 16 Sep 2024 17:59:37 +0300
+Subject: [PATCH] Suppress warnings
+
+---
+ skimage/graph/tests/test_rag.py    | 6 ++++++
+ skimage/util/tests/test_lookfor.py | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/skimage/graph/tests/test_rag.py b/skimage/graph/tests/test_rag.py
+index 6c223a5e4..d03c0f13c 100644
+--- a/skimage/graph/tests/test_rag.py
++++ b/skimage/graph/tests/test_rag.py
+@@ -5,6 +5,12 @@ from skimage import graph
+ from skimage import segmentation, data
+ from skimage._shared import testing
+ 
++import warnings
++
++with warnings.catch_warnings():
++    warnings.filterwarnings("ignore", message="networkx backend defined more than once: nx-loopback")
++    import networkx as nx
++
+ 
+ def max_edge(g, src, dst, n):
+     default = {'weight': -np.inf}
+diff --git a/skimage/util/tests/test_lookfor.py b/skimage/util/tests/test_lookfor.py
+index 7bdb5ba58..07dadd3fd 100644
+--- a/skimage/util/tests/test_lookfor.py
++++ b/skimage/util/tests/test_lookfor.py
+@@ -1,5 +1,11 @@
+ import skimage as ski
+ 
++import warnings
++
++with warnings.catch_warnings():
++    warnings.filterwarnings("ignore", message="networkx backend defined more than once: nx-loopback")
++    import networkx as nx
++
+ 
+ def test_lookfor_basic(capsys):
+     assert ski.lookfor is ski.util.lookfor
+-- 
+2.46.0
+
