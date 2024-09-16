@@ -81,6 +81,8 @@ test:
     - skimage
   source_files:
     - pyproject.toml
+  files:           # [py<310]
+    - py_tests.py  # [py<310]
   requires:
     - pip
     - pooch >=1.6.0
