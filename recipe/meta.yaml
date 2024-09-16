@@ -1,5 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.23.2" %}
+{% set version = "0.24.0" %}
 
 
 package:
@@ -8,11 +8,11 @@ package:
 
 source:
   url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: be1b8d38fb51b8076d829f682646f9fdb61f9936e43a8b775fb594c7c7930a88
+  sha256: a2cf85577f8a9105ac46130277ad27e1627bfa3effecff7c1ef3ea851e5671ba
 
 build:
   number: 0
-  skip: true  # [py<310]
+  skip: true  # [py<39]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -72,6 +72,10 @@ requirements:
 # known to be broken on s390x: if platform.machine() == "s390x" and plugin == "pil" and fmt == "png"
 {% set tests_to_skip = tests_to_skip + " or test_all_mono" %}          # [linux and s390x]
 
+# Don't test thresholding funcs for Dask compatibility, see https://github.com/scikit-image/scikit-image/pull/7509.
+# Remove it with a new scikit-image release >=0.25.0.
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
+
 test:
   imports:
     - skimage
@@ -86,7 +90,6 @@ test:
     - scikit-learn
     - numpydoc >=1.7
     - pytest >=7.0
-    - pytest-cov >=2.11.0
     - pytest-localserver
     - astropy >=5.0
     - dask-core >=2021.1.0
