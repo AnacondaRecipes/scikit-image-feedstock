@@ -77,7 +77,8 @@ requirements:
 # known to be broken on s390x: if platform.machine() == "s390x" and plugin == "pil" and fmt == "png"
 {% set tests_to_skip = tests_to_skip + " or test_all_mono" %}          # [linux and s390x]
 
-# Don't test thresholding funcs for Dask compatibility, see https://github.com/scikit-image/scikit-image/pull/7509.
+# Don't test thresholding funcs for Dask compatibility, 
+# see https://github.com/scikit-image/scikit-image/pull/7509.
 # Remove it with a new scikit-image release >=0.25.0.
 {% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
 
