@@ -100,10 +100,10 @@ test:
     - matplotlib-base
     - pywavelets
     - scikit-learn
-    - numpydoc >=1.7
+    - numpydoc >=1.7  # [py<313]
     - pytest >=7.0
     - pytest-localserver
-    - astropy >=5.0
+    - astropy >=5.0  # [py<313]
     - dask-core >=2021.1.0
     #- pytest-faulthandler
   commands:
