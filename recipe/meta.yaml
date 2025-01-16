@@ -88,6 +88,10 @@ requirements:
 # see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408 
 {% set tests_to_skip = tests_to_skip + " or test_2d_bf[float16] or test_2d_cg[float16] or test_2d_cg_mg[float16] or test_2d_cg_j[float16]" %}
 
+# tifffile uses deprecated attribute `ndarray.newbyteorder` (for py313)
+{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
+
+
 test:
   imports:
     - skimage
@@ -100,12 +104,12 @@ test:
     - matplotlib-base
     - pywavelets
     - scikit-learn
+    # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
     - numpydoc >=1.7  # [py<313]
+    - astropy >=5.0   # [py<313]
     - pytest >=7.0
     - pytest-localserver
-    - astropy >=5.0  # [py<313]
     - dask-core >=2021.1.0
-    #- pytest-faulthandler
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
