@@ -1,5 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.24.0" %}
+{% set version = "0.25.0" %}
 
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: a2cf85577f8a9105ac46130277ad27e1627bfa3effecff7c1ef3ea851e5671ba
+  sha256: 7e7ec5cdac70f6df2dd6151cc27d4b8b6f2e029b4485b7635bb9522dc7023ddb
   patches:                     # [py<310]
     # Suppress the warning (pollutes CI) for py<310
     # because of RuntimeWarning: networkx backend defined more than once: nx-loopback,
@@ -17,7 +17,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<39]
+  skip: true  # [py<310]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
@@ -30,32 +30,35 @@ requirements:
     - {{ compiler("cxx") }}
   host:
     - python
-    - cython >=3.0.4
-    - numpy {{ numpy }}
+    - cython >=3.0.8
+    - numpy 2
     - packaging
     - pip
-    - pythran
-    - meson-python >=0.15
-    - lazy_loader >=0.3
+    - pythran >=0.16
+    - meson-python >=0.16
+    - lazy_loader >=0.4
+    - setuptools >=68
   run:
     - python
-    - {{ pin_compatible('numpy', lower_bound='1.23') }}
-    - scipy >=1.9
-    - networkx >=2.8
-    - pillow >=9.1
-    - imageio >=2.33
+    - numpy >=1.24,<3
+    - scipy >=1.11.2
+    - networkx >=3.0
+    - pillow >=10.1
+    - imageio >=2.33,!=2.35.0
     - tifffile >=2022.8.12
     - packaging >=21
     - lazy_loader >=0.4
     - _openmp_mutex  # [linux]
   run_constrained:
-    - matplotlib-base >=3.6
+    - matplotlib-base >=3.7
     - pooch >=1.6.0
+    - pyamg >=5.2
     - astropy >=5.0
     - scikit-learn >=1.1
-    - pywavelets >=1.1.1
+    - pywavelets >=1.6
+    - scikit-learn >=1.2
     - cloudpickle >=0.2.1
-    - dask-core >=2021.1.0
+    - dask-core >=2021.1.0,!=2024.8.0
 
 {% set tests_to_skip = "_not_a_real_test" %}
 
@@ -81,6 +84,9 @@ requirements:
 # see https://github.com/scikit-image/scikit-image/pull/7509.
 # Remove it with a new scikit-image release >=0.25.0.
 {% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
+
+# see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408 
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf[float16] or test_2d_cg[float16] or test_2d_cg_mg[float16] or test_2d_cg_j[float16]" %}
 
 test:
   imports:
