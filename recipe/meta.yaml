@@ -34,7 +34,7 @@ requirements:
     - cython >=3.0.8
     - lazy_loader >=0.4
     - meson-python >=0.16
-    - ninja 1.12.1
+    - ninja-base 1.12.1
     - numpy 2
     - packaging
     - pip

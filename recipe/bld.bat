@@ -15,5 +15,5 @@ set "LDFLAGS="
 REM don't add d1trimfile option because clang doesn't recognize it.
 set "SRC_DIR="
 
-%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+%PYTHON% -m pip install . -vvv --no-deps --no-build-isolation
 if %ERRORLEVEL% neq 0 exit 1
