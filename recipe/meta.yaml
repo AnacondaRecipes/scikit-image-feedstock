@@ -28,17 +28,17 @@ requirements:
     - lld                   # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - ninja
     - pkg-config
   host:
     - python
     - cython >=3.0.8
+    - lazy_loader >=0.4
+    - meson-python >=0.16
+    - ninja 1.12.1
     - numpy 2
     - packaging
     - pip
     - pythran >=0.16
-    - meson-python >=0.16
-    - lazy_loader >=0.4
     - setuptools >=68
   run:
     - python
