@@ -81,8 +81,9 @@ requirements:
 # Remove it with a new scikit-image release >=0.25.0.
 {% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
 
-# see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408 
-{% set tests_to_skip = tests_to_skip + " or test_2d_bf[float16] or test_2d_cg[float16] or test_2d_cg_mg[float16] or test_2d_cg_j[float16]" %}  # [osx]
+# ValueError: Output dtype not compatible with inputs (failed on all platforms),
+# see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf[float16] or test_2d_cg[float16] or test_2d_cg_mg[float16] or test_2d_cg_j[float16]" %}
 
 # tifffile uses deprecated attribute `ndarray.newbyteorder` (for py313)
 {% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
