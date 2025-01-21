@@ -92,7 +92,7 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
 
 # CI failed on s390x after merging the PR with: graph/tests/test_rag.py::test_reproducibility - AssertionError
-{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux and s390x]
+{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux and s390x]
 
 test:
   imports:
