@@ -1,5 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.25.0" %}
+{% set version = "0.25.2" %}
 
 
 package:
@@ -7,8 +7,8 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 7e7ec5cdac70f6df2dd6151cc27d4b8b6f2e029b4485b7635bb9522dc7023ddb
+  url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: ca7cf6861179dc60f56fdd4e7f1df88ce44984472529f66d3ff472b7e75e67a1
 
 build:
   number: 0
@@ -30,7 +30,7 @@ requirements:
     - lazy_loader >=0.4
     - meson-python >=0.16
     - ninja-base 1.12.1
-    - numpy 2
+    - numpy {{ numpy }}
     - packaging
     - pip
     - pythran >=0.16
@@ -103,13 +103,13 @@ test:
     - pip
     - pooch >=1.6.0
     - asv
-    - matplotlib-base
-    - pywavelets
-    - scikit-learn
+    - matplotlib-base >=3.7
+    - pywavelets >=1.6
+    - scikit-learn >=1.2
     # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
     - numpydoc >=1.7  # [py<313]
     - astropy >=5.0   # [py<313]
-    - pytest >=7.0
+    - pytest >=8
     - pytest-localserver
     - dask-core >=2021.1.0
   commands:
