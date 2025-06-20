@@ -1,5 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.25.0" %}
+{% set version = "0.25.2" %}
 
 
 package:
@@ -7,8 +7,8 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/scikit-image/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 7e7ec5cdac70f6df2dd6151cc27d4b8b6f2e029b4485b7635bb9522dc7023ddb
+  url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: ca7cf6861179dc60f56fdd4e7f1df88ce44984472529f66d3ff472b7e75e67a1
 
 build:
   number: 0
@@ -30,7 +30,7 @@ requirements:
     - lazy_loader >=0.4
     - meson-python >=0.16
     - ninja-base 1.12.1
-    - numpy 2
+    - numpy {{ numpy }}
     - packaging
     - pip
     - pythran >=0.16
@@ -38,7 +38,7 @@ requirements:
   run:
     - python
     - numpy >=1.24,<3
-    - scipy >=1.11.2
+    - scipy >=1.11.4
     - networkx >=3.0
     - pillow >=10.1
     - imageio >=2.33,!=2.35.0
@@ -62,7 +62,7 @@ requirements:
 # It seems that the apply_parallel tests can have relatively small errors,
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
-{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %} # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
 
 # https://github.com/scikit-image/scikit-image/issues/6865
 {% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
@@ -71,10 +71,8 @@ requirements:
 {% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
 
 # https://github.com/scikit-image/scikit-image/issues/6994
-{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip[shape1-uint16]" %}  # [linux and s390x]
-
-# known to be broken on s390x: if platform.machine() == "s390x" and plugin == "pil" and fmt == "png"
-{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}          # [linux and s390x]
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
 
 # Don't test thresholding funcs for Dask compatibility, 
 # see https://github.com/scikit-image/scikit-image/pull/7509.
@@ -83,7 +81,7 @@ requirements:
 
 # ValueError: Output dtype not compatible with inputs (failed on all platforms),
 # see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408
-{% set tests_to_skip = tests_to_skip + " or test_2d_bf[float16] or test_2d_cg[float16] or test_2d_cg_mg[float16] or test_2d_cg_j[float16]" %}
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
 
 # tifffile uses deprecated attribute `ndarray.newbyteorder` (for py313)
 {% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
@@ -91,8 +89,8 @@ requirements:
 # AssertionError: Arrays are not almost equal to 7 decimals. Possible, it's a numpy compatibility issue
 {% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
 
-# CI failed on s390x after merging the PR with: graph/tests/test_rag.py::test_reproducibility - AssertionError
-{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux and s390x]
+# graph/tests/test_rag.py::test_reproducibility - AssertionError vectors are not equal on linux
+{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
 
 test:
   imports:
@@ -103,13 +101,13 @@ test:
     - pip
     - pooch >=1.6.0
     - asv
-    - matplotlib-base
-    - pywavelets
-    - scikit-learn
+    - matplotlib-base >=3.7
+    - pywavelets >=1.6
+    - scikit-learn >=1.2
     # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
     - numpydoc >=1.7  # [py<313]
     - astropy >=5.0   # [py<313]
-    - pytest >=7.0
+    - pytest >=8
     - pytest-localserver
     - dask-core >=2021.1.0
   commands:
@@ -125,7 +123,7 @@ test:
     - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
-  home: https://scikit-image.org/
+  home: https://scikit-image.org
   license: BSD-3-Clause AND MIT AND BSD-2-Clause
   license_family: Other
   license_file: LICENSE.txt
@@ -136,7 +134,7 @@ about:
     We pride ourselves on high-quality, peer-reviewed code,
     written by an active community of volunteers.
   dev_url: https://github.com/scikit-image/scikit-image
-  doc_url: https://scikit-image.org/docs/stable/
+  doc_url: https://scikit-image.org/docs/stable
 
 extra:
   recipe-maintainers:
