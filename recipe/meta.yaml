@@ -1,6 +1,16 @@
 {% set name = "scikit-image" %}
 {% set version = "0.25.2" %}
-
+{% set tests_to_skip = "_not_a_real_test" %}
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
+{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
+{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
 
 package:
   name: {{ name }}
@@ -11,7 +21,7 @@ source:
   sha256: ca7cf6861179dc60f56fdd4e7f1df88ce44984472529f66d3ff472b7e75e67a1
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
   entry_points:
     - skivi = skimage.scripts.skivi:main
@@ -19,8 +29,8 @@ build:
 requirements:
   build:
     # pythran code needs clang-cl on windows
-    - clang                 # [win]
-    - lld                   # [win]
+    - clang  # [win]
+    - lld  # [win]
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - pkg-config
@@ -56,42 +66,21 @@ requirements:
     - cloudpickle >=0.2.1
     - dask-core >=2021.1.0,!=2024.8.0
 
-{% set tests_to_skip = "_not_a_real_test" %}
-
 # TODO: Report this upstream
 # It seems that the apply_parallel tests can have relatively small errors,
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
-{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
-
 # https://github.com/scikit-image/scikit-image/issues/6865
-{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
-
 # https://github.com/scikit-image/scikit-image/issues/7061
-{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
-
 # https://github.com/scikit-image/scikit-image/issues/6994
-{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
-{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
-
-# Don't test thresholding funcs for Dask compatibility, 
+# Don't test thresholding funcs for Dask compatibility,
 # see https://github.com/scikit-image/scikit-image/pull/7509.
 # Remove it with a new scikit-image release >=0.25.0.
-{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
-
 # ValueError: Output dtype not compatible with inputs (failed on all platforms),
 # see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408
-{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
-
 # tifffile uses deprecated attribute `ndarray.newbyteorder` (for py313)
-{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
-
 # AssertionError: Arrays are not almost equal to 7 decimals. Possible, it's a numpy compatibility issue
-{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
-
 # graph/tests/test_rag.py::test_reproducibility - AssertionError vectors are not equal on linux
-{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
-
 test:
   imports:
     - skimage
@@ -106,17 +95,17 @@ test:
     - scikit-learn >=1.2
     # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
     - numpydoc >=1.7  # [py<313]
-    - astropy >=5.0   # [py<313]
+    - astropy >=5.0  # [py<313]
     - pytest >=8
     - pytest-localserver
     - dask-core >=2021.1.0
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
-    - set OPENBLAS_NUM_THREADS=1          # [win]
-    - set OMP_NUM_THREADS=1               # [win]
-    - export OPENBLAS_NUM_THREADS=1       # [not win]
-    - export OMP_NUM_THREADS=1            # [not win]
+    - set OPENBLAS_NUM_THREADS=1  # [win]
+    - set OMP_NUM_THREADS=1  # [win]
+    - export OPENBLAS_NUM_THREADS=1  # [not win]
+    - export OMP_NUM_THREADS=1  # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
     - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
