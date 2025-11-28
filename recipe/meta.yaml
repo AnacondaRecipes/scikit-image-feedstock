@@ -95,7 +95,6 @@ requirements:
 #  DeprecationWarning: Saving I mode images as PNG is deprecated and will be removed in Pillow 13 (2026-10-15)
 {% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
 
-test_png_round_trip 
 test:
   imports:
     - skimage
