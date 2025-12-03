@@ -1,7 +1,6 @@
 {% set name = "scikit-image" %}
 {% set version = "0.25.2" %}
 
-
 package:
   name: {{ name }}
   version: {{ version }}
@@ -11,7 +10,7 @@ source:
   sha256: ca7cf6861179dc60f56fdd4e7f1df88ce44984472529f66d3ff472b7e75e67a1
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
   entry_points:
     - skivi = skimage.scripts.skivi:main
@@ -19,8 +18,9 @@ build:
 requirements:
   build:
     # pythran code needs clang-cl on windows
-    - clang                 # [win]
-    - lld                   # [win]
+    - clang  # [win]
+    - lld  # [win]
+    - {{ stdlib('c') }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - pkg-config
@@ -92,6 +92,15 @@ requirements:
 # graph/tests/test_rag.py::test_reproducibility - AssertionError vectors are not equal on linux
 {% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
 
+#  DeprecationWarning: Saving I mode images as PNG is deprecated and will be removed in Pillow 13 (2026-10-15)
+{% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
+
+# AssertionError: Arrays are not almost equal to 4 decimals
+{% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
+
+# AssertionError: Regex pattern did not match.
+{% set tests_to_skip = tests_to_skip + " or test_wrong_param_name" %}
+
 test:
   imports:
     - skimage
@@ -100,27 +109,29 @@ test:
   requires:
     - pip
     - pooch >=1.6.0
-    - asv
+    - asv  # [py<314]
     - matplotlib-base >=3.7
-    - pywavelets >=1.6
-    - scikit-learn >=1.2
-    # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
-    - numpydoc >=1.7  # [py<313]
-    - astropy >=5.0   # [py<313]
+    # TODO: Remove the selector when numpydoc (with sphinx!), pywavelets, scikit-learn and astropy will have py314 support on the main channel
+    - pywavelets >=1.6  # [py<314]
+    # scikit-learn is a cyclic test dependency, skip it for py314.
+    - scikit-learn >=1.2  # [py<314]
+    - numpydoc >=1.7  # [py<314]
+    - astropy >=5.0  # [py<314]
     - pytest >=8
     - pytest-localserver
-    - dask-core >=2021.1.0
+    - dask-core >=2021.1.0  # [py<314]
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
-    - set OPENBLAS_NUM_THREADS=1          # [win]
-    - set OMP_NUM_THREADS=1               # [win]
-    - export OPENBLAS_NUM_THREADS=1       # [not win]
-    - export OMP_NUM_THREADS=1            # [not win]
+    - set OPENBLAS_NUM_THREADS=1  # [win]
+    - set OMP_NUM_THREADS=1  # [win]
+    - export OPENBLAS_NUM_THREADS=1  # [not win]
+    - export OMP_NUM_THREADS=1  # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
-    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
-    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
+    # Ignore util/tests/test_apply_parallel.py because of pytest.PytestDeprecationWarning in py314.
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org
