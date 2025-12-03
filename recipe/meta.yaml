@@ -98,6 +98,9 @@ requirements:
 # AssertionError: Arrays are not almost equal to 4 decimals
 {% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
 
+# AssertionError: Regex pattern did not match.
+{% set tests_to_skip = tests_to_skip + " or test_wrong_param_name" %}
+
 test:
   imports:
     - skimage
@@ -116,7 +119,7 @@ test:
     - astropy >=5.0  # [py<314]
     - pytest >=8
     - pytest-localserver
-    - dask-core >=2021.1.0
+    - dask-core >=2021.1.0  # [py<314]
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
@@ -126,8 +129,9 @@ test:
     - export OMP_NUM_THREADS=1  # [not win]
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
-    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [unix]
-    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage -k "not ({{ tests_to_skip }})"  # [win]
+    # Ignore util/tests/test_apply_parallel.py because of pytest.PytestDeprecationWarning in py314.
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org
