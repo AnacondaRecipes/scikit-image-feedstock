@@ -106,13 +106,13 @@ test:
   requires:
     - pip
     - pooch >=1.6.0
-    - asv
+    - asv  # [py<314]
     - matplotlib-base >=3.7
     - pywavelets >=1.6
-    - scikit-learn >=1.2
+    - numpydoc >=1.7
     # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
-    - numpydoc >=1.7  # [py<313]
-    - astropy >=5.0  # [py<313]
+    - scikit-learn >=1.2  # [py<314]
+    - astropy >=5.0  # [py<314]
     - pytest >=8
     - pytest-localserver
     - dask-core >=2021.1.0
