@@ -108,10 +108,10 @@ test:
     - pooch >=1.6.0
     - asv  # [py<314]
     - matplotlib-base >=3.7
-    - pywavelets >=1.6
-    - numpydoc >=1.7
-    # TODO: Remove the selector when numpydoc and astropy will have py313 support on the main channel
+    # TODO: Remove the selector when numpydoc (with sphinx!), pywavelets, scikit-learn and astropy will have py314 support on the main channel
+    - pywavelets >=1.6  # [py<314]
     - scikit-learn >=1.2  # [py<314]
+    - numpydoc >=1.7  # [py<314]
     - astropy >=5.0  # [py<314]
     - pytest >=8
     - pytest-localserver
