@@ -113,7 +113,7 @@ test:
     - matplotlib-base >=3.7
     # TODO: Remove the selector when numpydoc (with sphinx!), pywavelets, scikit-learn and astropy will have py314 support on the main channel
     - pywavelets >=1.6  # [py<314]
-    # scikit-learn is a cyclic dependency, skip it for py314.
+    # scikit-learn is a cyclic test dependency, skip it for py314.
     - scikit-learn >=1.2  # [py<314]
     - numpydoc >=1.7  # [py<314]
     - astropy >=5.0  # [py<314]
