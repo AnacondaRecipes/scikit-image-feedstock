@@ -1,5 +1,5 @@
 {% set name = "scikit-image" %}
-{% set version = "0.25.2" %}
+{% set version = "0.26.0" %}
 
 package:
   name: {{ name }}
@@ -7,37 +7,36 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: ca7cf6861179dc60f56fdd4e7f1df88ce44984472529f66d3ff472b7e75e67a1
+  sha256: 09bb8cbb2a7b0c4f24fd4caeda6357732c64c2556520bdbad1dc15fb498e6a08
 
 build:
-  number: 1
-  skip: true  # [py<310]
+  number: 0
+  skip: true  # [py<311]
   entry_points:
     - skivi = skimage.scripts.skivi:main
 
 requirements:
   build:
-    # pythran code needs clang-cl on windows
-    - clang  # [win]
-    - lld  # [win]
     - {{ stdlib('c') }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
+    # pythran code needs clang-cl on windows
+    - clang  # [win]
+    - lld  # [win]
+    - ninja-base
     - pkg-config
   host:
+    - pip
     - python
-    - cython >=3.0.8
+    - numpy >=1.24
+    - cython >=3.0.8,!=3.2.0b1
     - lazy_loader >=0.4
     - meson-python >=0.16
-    - ninja-base 1.12.1
-    - numpy {{ numpy }}
-    - packaging
-    - pip
+    - packaging >=21
     - pythran >=0.16
-    - setuptools >=68
   run:
     - python
-    - numpy >=1.24,<3
+    - numpy >=1.24
     - scipy >=1.11.4
     - networkx >=3.0
     - pillow >=10.1
@@ -46,65 +45,62 @@ requirements:
     - packaging >=21
     - lazy_loader >=0.4
     - _openmp_mutex  # [linux]
+    - lazy_loader >=0.4
   run_constrained:
     - matplotlib-base >=3.7
     - pooch >=1.6.0
     - pyamg >=5.2
-    - astropy >=5.0
+    - astropy >=6.0
     - pywavelets >=1.6
     - scikit-learn >=1.2
     - cloudpickle >=0.2.1
     - dask-core >=2021.1.0,!=2024.8.0
-
-{% set tests_to_skip = "_not_a_real_test" %}
+    - meson-python >=0.16
+    - ninja >=1.11.1.1
+    - Cython >=3.0.8,!=3.2.0b1
+    - pythran >=0.16
+    - numpy >=2.0
+    - spin ==0.13
+    - python-build >=1.2.1
 
 # TODO: Report this upstream
 # It seems that the apply_parallel tests can have relatively small errors,
 # depending on underlying system; conda-forge has observed it on Windows, and
 # Anaconda has observed it on Windows, macOS, and Linux.
-{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
-
 # https://github.com/scikit-image/scikit-image/issues/6865
-{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
-
 # https://github.com/scikit-image/scikit-image/issues/7061
-{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
-
 # https://github.com/scikit-image/scikit-image/issues/6994
-{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
-{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
-
-# Don't test thresholding funcs for Dask compatibility, 
+# Don't test thresholding funcs for Dask compatibility,
 # see https://github.com/scikit-image/scikit-image/pull/7509.
 # Remove it with a new scikit-image release >=0.25.0.
-{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
-
 # ValueError: Output dtype not compatible with inputs (failed on all platforms),
 # see https://github.com/scipy/scipy/issues/20200 and https://github.com/scipy/scipy/issues/7408
-{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
-
 # tifffile uses deprecated attribute `ndarray.newbyteorder` (for py313)
-{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
-
 # AssertionError: Arrays are not almost equal to 7 decimals. Possible, it's a numpy compatibility issue
-{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
-
 # graph/tests/test_rag.py::test_reproducibility - AssertionError vectors are not equal on linux
-{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
-
 #  DeprecationWarning: Saving I mode images as PNG is deprecated and will be removed in Pillow 13 (2026-10-15)
-{% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
-
 # AssertionError: Arrays are not almost equal to 4 decimals
-{% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
-
 # AssertionError: Regex pattern did not match.
+{% set tests_to_skip = "_not_a_real_test" %}
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
+{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
+{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
+{% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
 {% set tests_to_skip = tests_to_skip + " or test_wrong_param_name" %}
 
 test:
   imports:
     - skimage
   source_files:
+    - tests
     - pyproject.toml
   requires:
     - pip
@@ -118,6 +114,7 @@ test:
     - numpydoc >=1.7  # [py<314]
     - astropy >=5.0  # [py<314]
     - pytest >=8
+    - pytest-pretty
     - pytest-localserver
     - dask-core >=2021.1.0  # [py<314]
   commands:
@@ -130,8 +127,8 @@ test:
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
     # Ignore util/tests/test_apply_parallel.py because of pytest.PytestDeprecationWarning in py314.
-    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [unix]
-    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [win]
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest -v tests --ignore="tests/conftest.py" -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest -v tests --ignore="tests/conftest.py" -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org
