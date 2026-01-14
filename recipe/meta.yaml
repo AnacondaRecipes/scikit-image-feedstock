@@ -1,19 +1,5 @@
 {% set name = "scikit-image" %}
 {% set version = "0.26.0" %}
-{% set tests_to_skip = "_not_a_real_test" %}
-{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
-{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
-{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
-{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
-{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
-{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
-{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
-{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
-{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
-{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
-{% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
-{% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
-{% set tests_to_skip = tests_to_skip + " or test_wrong_param_name" %}
 
 package:
   name: {{ name }}
@@ -31,24 +17,23 @@ build:
 
 requirements:
   build:
-    # pythran code needs clang-cl on windows
-    - clang  # [win]
-    - lld  # [win]
     - {{ stdlib('c') }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
+    # pythran code needs clang-cl on windows
+    - clang  # [win]
+    - lld  # [win]
+    - ninja-base
     - pkg-config
   host:
+    - pip
     - python
+    - numpy >=1.24
     - cython >=3.0.8,!=3.2.0b1
     - lazy_loader >=0.4
     - meson-python >=0.16
-    - ninja-base 1.12.1
-    - numpy {{ numpy }}
-    - packaging
-    - pip
+    - packaging >=21
     - pythran >=0.16
-    - numpy >=2.0
   run:
     - python
     - numpy >=1.24
@@ -60,7 +45,7 @@ requirements:
     - packaging >=21
     - lazy_loader >=0.4
     - _openmp_mutex  # [linux]
-    - lazy-loader >=0.4
+    - lazy_loader >=0.4
   run_constrained:
     - matplotlib-base >=3.7
     - pooch >=1.6.0
@@ -96,10 +81,26 @@ requirements:
 #  DeprecationWarning: Saving I mode images as PNG is deprecated and will be removed in Pillow 13 (2026-10-15)
 # AssertionError: Arrays are not almost equal to 4 decimals
 # AssertionError: Regex pattern did not match.
+{% set tests_to_skip = "_not_a_real_test" %}
+{% set tests_to_skip = tests_to_skip + " or test_apply_parallel_rgb" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_analytical_moments_calculation" %}
+{% set tests_to_skip = tests_to_skip + " or test_ellipse_parameter_stability" %}
+{% set tests_to_skip = tests_to_skip + " or test_imsave_roundtrip" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_all_mono" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_thresholds_dask_compatibility" %}
+{% set tests_to_skip = tests_to_skip + " or test_2d_bf or test_2d_cg or test_2d_cg_mg or test_2d_cg_j" %}
+{% set tests_to_skip = tests_to_skip + " or test_kidney_3d_multichannel or test_lily_multichannel" %}  # [py>=313]
+{% set tests_to_skip = tests_to_skip + " or test_are or test_rag_boundary" %}  # [osx and x86_64]
+{% set tests_to_skip = tests_to_skip + " or test_reproducibility" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or test_png_round_trip" %}
+{% set tests_to_skip = tests_to_skip + " or test_polynomial_weighted_estimation" %}
+{% set tests_to_skip = tests_to_skip + " or test_wrong_param_name" %}
+
 test:
   imports:
     - skimage
   source_files:
+    - tests
     - pyproject.toml
   requires:
     - pip
@@ -113,6 +114,7 @@ test:
     - numpydoc >=1.7  # [py<314]
     - astropy >=5.0  # [py<314]
     - pytest >=8
+    - pytest-pretty
     - pytest-localserver
     - dask-core >=2021.1.0  # [py<314]
   commands:
@@ -125,8 +127,8 @@ test:
     - setx MPLBACKEND "Agg"  # [win]
     - export MPLBACKEND=Agg  # [unix]
     # Ignore util/tests/test_apply_parallel.py because of pytest.PytestDeprecationWarning in py314.
-    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [unix]
-    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest --verbose --pyargs skimage --verbose --pyargs skimage --ignore="util/tests/test_apply_parallel.py" -k "not ({{ tests_to_skip }})"  # [win]
+    - SKIMAGE_TEST_STRICT_WARNINGS=0 pytest -v tests --ignore="tests/conftest.py" -k "not ({{ tests_to_skip }})"  # [unix]
+    - set "SKIMAGE_TEST_STRICT_WARNINGS=0" & pytest -v tests --ignore="tests/conftest.py" -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://scikit-image.org
