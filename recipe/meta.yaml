@@ -39,7 +39,11 @@ requirements:
     - numpy >=1.24
     - scipy >=1.11.4
     - networkx >=3.0
-    - pillow >=10.1
+    # skimage's PIL plugin calls image.getdata(), which Pillow 12.1+ treats as a DeprecationWarning
+    # that pytest promotes to an error (or the warning is raised as an exception due to strict warning filters).
+    # In Pillow 12.1, which deprecated Image.getdata() and skimage pil_plugin.py hasn't been updated to use get_flattened_data yet.
+    # https://pillow.readthedocs.io/en/stable/deprecations.html#image-getdata
+    - pillow >=10.1,<12
     - imageio >=2.33,!=2.35.0
     - tifffile >=2022.8.12
     - packaging >=21
