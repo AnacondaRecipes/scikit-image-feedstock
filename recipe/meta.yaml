@@ -20,7 +20,7 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    # pythran code needs clang-cl on windows
+    # pythran code needs clang-cl on Windows
     - clang  # [win]
     - lld  # [win]
     - ninja-base
@@ -37,7 +37,9 @@ requirements:
   run:
     - python
     - numpy >=1.24
-    - scipy >=1.11.4
+    # E DeprecationWarning: `minkowski_distance` is deprecated in favor
+    # of `scipy.spatial.distance.minkowski` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
+    - scipy >=1.11.4,<1.18
     - networkx >=3.0
     # skimage's PIL plugin calls image.getdata(), which Pillow 12.1+ treats as a DeprecationWarning
     # that pytest promotes to an error (or the warning is raised as an exception due to strict warning filters).
