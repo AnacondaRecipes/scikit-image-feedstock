@@ -10,7 +10,7 @@ source:
   sha256: 09bb8cbb2a7b0c4f24fd4caeda6357732c64c2556520bdbad1dc15fb498e6a08
 
 build:
-  number: 1
+  number: 2
   skip: true  # [py<311]
   entry_points:
     - skivi = skimage.scripts.skivi:main
@@ -28,7 +28,7 @@ requirements:
   host:
     - pip
     - python
-    - numpy >=1.24
+    - numpy {{ numpy }}
     - cython >=3.0.8,!=3.2.0b1
     - lazy_loader >=0.4
     - meson-python >=0.16
@@ -36,7 +36,10 @@ requirements:
     - pythran >=0.16
   run:
     - python
-    - numpy >=1.24
+    # E   DeprecationWarning: Setting the shape on a NumPy array has been deprecated in NumPy 2.5.
+    # E   As an alternative, you can create a new view using np.reshape (with copy=False if needed).
+    # https://github.com/scikit-image/scikit-image/pull/8020
+    - numpy >=1.24,<2.5
     # E DeprecationWarning: `minkowski_distance` is deprecated in favor
     # of `scipy.spatial.distance.minkowski` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
     - scipy >=1.11.4,<1.18
