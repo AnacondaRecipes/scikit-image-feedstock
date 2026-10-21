@@ -114,21 +114,19 @@ test:
   requires:
     - pip
     - pooch >=1.6.0
-    - asv  # [py<314]
+    - asv
     - matplotlib-base >=3.7
-    # TODO: Remove the selector when numpydoc (with sphinx!), pywavelets, scikit-learn and astropy will have py314 support on the main channel
-    - pywavelets >=1.6  # [py<314]
-    # scikit-learn is a cyclic test dependency, skip it for py314.
-    - scikit-learn >=1.2  # [py<314]
-    - numpydoc >=1.7  # [py<314]
-    - astropy >=5.0  # [py<314]
+    - pywavelets >=1.6
+    - scikit-learn >=1.2
+    - numpydoc >=1.7
+    - astropy >=5.0
     # pytest 9.1 deprecates iterator argvalues (e.g. itertools.product) in parametrize.
     # Upstream's warning-as-error filter turns this into a collection failure.
     # https://docs.pytest.org/en/stable/deprecations.html#parametrize-iterators
     - pytest >=8.3,<9.1
     - pytest-pretty
     - pytest-localserver
-    - dask-core >=2021.1.0  # [py<314]
+    - dask-core >=2021.1.0
   commands:
     - pip check
     - python -c "import skimage; print(skimage.__version__)"
