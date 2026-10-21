@@ -1,14 +1,7 @@
-From a5ea15fa8f290560db00dbd8ec82b802e5b515dd Mon Sep 17 00:00:00 2001
-From: Eric Lundby <Eric.Lundby@gmail.com>
-Date: Wed, 21 Oct 2026 09:50:17 -0600
-Subject: [PATCH] Handle Pillow Image.getdata deprecation
-
-Use Image.get_flattened_data() when available while retaining support for
-older Pillow versions.
-
-Backport only the PIL plugin change from:
-https://github.com/scikit-image/scikit-image/pull/8010
-https://github.com/scikit-image/scikit-image/commit/9d8daba419249f9d3327fe85177d79b18adb6032
+From 4ec4f2ba2951530480ef9c0970ea32f103d6c6ed Mon Sep 17 00:00:00 2001
+From: Stefan van der Walt <stefanv@berkeley.edu>
+Date: Wed, 7 Jan 2026 15:13:20 -0800
+Subject: [PATCH 1/2] Handle PIL Image.getdata deprecation
 
 ---
  src/skimage/io/_plugins/pil_plugin.py | 4 ++++
