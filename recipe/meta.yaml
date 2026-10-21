@@ -122,7 +122,10 @@ test:
     - scikit-learn >=1.2  # [py<314]
     - numpydoc >=1.7  # [py<314]
     - astropy >=5.0  # [py<314]
-    - pytest >=8
+    # pytest 9.1 deprecates iterator argvalues (e.g. itertools.product) in parametrize.
+    # Upstream's warning-as-error filter turns this into a collection failure.
+    # https://docs.pytest.org/en/stable/deprecations.html#parametrize-iterators
+    - pytest >=8.3,<9.1
     - pytest-pretty
     - pytest-localserver
     - dask-core >=2021.1.0  # [py<314]
