@@ -8,9 +8,13 @@ package:
 source:
   url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 09bb8cbb2a7b0c4f24fd4caeda6357732c64c2556520bdbad1dc15fb498e6a08
+  patches:
+    # Backport of upstream fix: Pillow 12.1 deprecates Image.getdata() (removed in Pillow 13)
+    # in favor of get_flattened_data(). Remove with a scikit-image release containing the fix.
+    - pillow-get-flattened-data.patch
 
 build:
-  number: 2
+  number: 3
   skip: true  # [py<311]
   entry_points:
     - skivi = skimage.scripts.skivi:main
@@ -44,11 +48,7 @@ requirements:
     # of `scipy.spatial.distance.minkowski` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
     - scipy >=1.11.4,<1.18
     - networkx >=3.0
-    # skimage's PIL plugin calls image.getdata(), which Pillow 12.1+ treats as a DeprecationWarning
-    # that pytest promotes to an error (or the warning is raised as an exception due to strict warning filters).
-    # In Pillow 12.1, which deprecated Image.getdata() and skimage pil_plugin.py hasn't been updated to use get_flattened_data yet.
-    # https://pillow.readthedocs.io/en/stable/deprecations.html#image-getdata
-    - pillow >=10.1,<12
+    - pillow >=10.1
     - imageio >=2.33,!=2.35.0
     - tifffile >=2022.8.12
     - packaging >=21

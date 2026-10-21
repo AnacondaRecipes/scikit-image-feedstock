@@ -1,0 +1,13 @@
+--- a/src/skimage/io/_plugins/pil_plugin.py
++++ b/src/skimage/io/_plugins/pil_plugin.py
+@@ -47,6 +47,10 @@
+     Refer to ``imread``.
+ 
+     """
++    # PIL 12.1.0 renames getdata
++    if hasattr(image, "get_flattened_data"):
++        image.getdata = image.get_flattened_data
++
+     try:
+         # this will raise an IOError if the file is not readable
+         image.getdata()[0]
